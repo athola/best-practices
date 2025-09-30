@@ -1,0 +1,461 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Monitoring and Observability - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="monitoring-and-observability"><a class="header" href="#monitoring-and-observability">Monitoring and Observability</a></h1>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>Monitoring and observability are essential for understanding system behavior, detecting issues, and maintaining operational excellence. Effective monitoring provides visibility into system performance, while observability enables deep analysis of system behavior through metrics, logs, and traces.</p>
+<h2 id="monitoring-philosophy"><a class="header" href="#monitoring-philosophy">Monitoring Philosophy</a></h2>
+<p>"Monitoring tells you when something is wrong; observability helps you understand why. The most effective systems combine both approaches to provide comprehensive visibility into system behavior."</p>
+<h3 id="monitoring-principles"><a class="header" href="#monitoring-principles">Monitoring Principles</a></h3>
+<p><strong>Principle 1: Monitor What Matters</strong>
+"Don't monitor everything—monitor what matters. Focus on metrics that directly impact user experience and business outcomes."</p>
+<p><strong>Principle 2: Make Monitoring Actionable</strong>
+"Every alert should have a clear action. If you can't act on an alert, it's just noise."</p>
+<p><strong>Principle 3: Design for Observability</strong>
+"Build observability into your systems from the beginning. Don't treat it as an afterthought."</p>
+<p><strong>Principle 4: Context is King</strong>
+"Monitoring without context is just data. Provide context to make monitoring meaningful."</p>
+<p><strong>Principle 5: Continuous Improvement</strong>
+"Monitoring is not static. Continuously refine your monitoring based on incidents and changing requirements."</p>
+<h2 id="metrics-and-monitoring"><a class="header" href="#metrics-and-monitoring">Metrics and Monitoring</a></h2>
+<h3 id="metric-collection"><a class="header" href="#metric-collection">Metric Collection</a></h3>
+<p><strong>Metrics Collection Framework</strong></p>
+<pre><code class="language-python"># Recommended approach for metrics collection
+class MetricsCollector:
+    def __init__(self):
+        self.metrics_registry = MetricsRegistry()
+        self.metric_exporters = []
+        self.sampling_rate = 1.0
+    
+    def register_metric(self, metric):
+        """Register metric for collection"""
+        self.metrics_registry.register(metric)
+    
+    def add_exporter(self, exporter):
+        """Add metric exporter"""
+        self.metric_exporters.append(exporter)
+    
+    def collect_metrics(self):
+        """Collect all registered metrics"""
+        metrics = {}
+        
+        for metric_name, metric in self.metrics_registry.get_metrics():
+            if random.random() &lt; self.sampling_rate:
+                metrics[metric_name] = metric.collect()
+        
+        return metrics
+    
+    def export_metrics(self, metrics):
+        """Export metrics to all configured exporters"""
+        for exporter in self.metric_exporters:
+            try:
+                exporter.export(metrics)
+            except Exception as e:
+                logger.error(f"Failed to export metrics to {exporter.name}: {e}")
+</code></pre>
+<h3 id="alerting-strategies"><a class="header" href="#alerting-strategies">Alerting Strategies</a></h3>
+<p><strong>Alerting Framework</strong></p>
+<pre><code class="language-python"># Recommended approach for alerting
+class AlertingManager:
+    def __init__(self):
+        self.alert_rules = []
+        self.alert_channels = []
+        self.alert_history = AlertHistory()
+        self.deduplicator = AlertDeduplicator()
+    
+    def add_alert_rule(self, rule):
+        """Add alert rule"""
+        self.alert_rules.append(rule)
+    
+    def add_alert_channel(self, channel):
+        """Add alert channel"""
+        self.alert_channels.append(channel)
+    
+    def evaluate_alerts(self, metrics):
+        """Evaluate all alert rules against metrics"""
+        alerts = []
+        
+        for rule in self.alert_rules:
+            try:
+                alert = rule.evaluate(metrics)
+                if alert:
+                    # Check for duplicates
+                    if not self.deduplicator.is_duplicate(alert):
+                        alerts.append(alert)
+                        self.deduplicator.record_alert(alert)
+            except Exception as e:
+                logger.error(f"Failed to evaluate alert rule {rule.name}: {e}")
+        
+        # Send alerts
+        for alert in alerts:
+            self._send_alert(alert)
+            self.alert_history.record_alert(alert)
+        
+        return alerts
+    
+    def _send_alert(self, alert):
+        """Send alert to all channels"""
+        for channel in self.alert_channels:
+            try:
+                channel.send(alert)
+            except Exception as e:
+                logger.error(f"Failed to send alert to {channel.name}: {e}")
+</code></pre>
+<h2 id="logging-strategies"><a class="header" href="#logging-strategies">Logging Strategies</a></h2>
+<h3 id="structured-logging"><a class="header" href="#structured-logging">Structured Logging</a></h3>
+<p><strong>Structured Logging Framework</strong></p>
+<pre><code class="language-python"># Recommended approach for structured logging
+class StructuredLogger:
+    def __init__(self, name, level=logging.INFO):
+        self.name = name
+        self.level = level
+        self.handlers = []
+        self.context = {}
+    
+    def add_handler(self, handler):
+        """Add log handler"""
+        self.handlers.append(handler)
+    
+    def add_context(self, **kwargs):
+        """Add context to all log messages"""
+        self.context.update(kwargs)
+    
+    def log(self, level, message, **kwargs):
+        """Log structured message"""
+        if level &lt; self.level:
+            return
+        
+        # Create structured log entry
+        log_entry = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'level': logging.getLevelName(level),
+            'logger': self.name,
+            'message': message,
+            'context': {**self.context, **kwargs}
+        }
+        
+        # Send to all handlers
+        for handler in self.handlers:
+            try:
+                handler.handle(log_entry)
+            except Exception as e:
+                logger.error(f"Failed to handle log entry: {e}")
+</code></pre>
+<h2 id="distributed-tracing"><a class="header" href="#distributed-tracing">Distributed Tracing</a></h2>
+<h3 id="trace-collection"><a class="header" href="#trace-collection">Trace Collection</a></h3>
+<p><strong>Distributed Tracing Framework</strong></p>
+<pre><code class="language-python"># Recommended approach for distributed tracing
+class TracingManager:
+    def __init__(self):
+        self.tracer = Tracer()
+        self.span_processors = []
+        self.sampling_rate = 1.0
+    
+    def add_span_processor(self, processor):
+        """Add span processor"""
+        self.span_processors.append(processor)
+    
+    def start_span(self, name, context=None):
+        """Start new span"""
+        if random.random() &gt; self.sampling_rate:
+            return NoopSpan()
+        
+        span = self.tracer.start_span(name, context)
+        return span
+    
+    def finish_span(self, span):
+        """Finish span and send to processors"""
+        if isinstance(span, NoopSpan):
+            return
+        
+        span.finish()
+        
+        for processor in self.span_processors:
+            try:
+                processor.process(span)
+            except Exception as e:
+                logger.error(f"Failed to process span: {e}")
+</code></pre>
+<h2 id="observability-patterns"><a class="header" href="#observability-patterns">Observability Patterns</a></h2>
+<h3 id="the-three-pillars"><a class="header" href="#the-three-pillars">The Three Pillars</a></h3>
+<p><strong>Metrics, Logs, and Traces Integration</strong></p>
+<pre><code class="language-python"># Recommended approach for integrating the three pillars
+class ObservabilityPlatform:
+    def __init__(self):
+        self.metrics_collector = MetricsCollector()
+        self.log_aggregator = LogAggregator()
+        self.tracing_manager = TracingManager()
+        self.correlation_manager = CorrelationManager()
+    
+    def correlate_events(self, time_window=300):
+        """Correlate events across metrics, logs, and traces"""
+        # Get recent events
+        metrics = self.metrics_collector.get_recent_metrics(time_window)
+        logs = self.log_aggregator.get_recent_logs(time_window)
+        traces = self.tracing_manager.get_recent_traces(time_window)
+        
+        # Correlate events
+        correlations = self.correlation_manager.correlate(
+            metrics=metrics,
+            logs=logs,
+            traces=traces
+        )
+        
+        return correlations
+</code></pre>
+<h2 id="key-takeaways"><a class="header" href="#key-takeaways">Key Takeaways</a></h2>
+<ol>
+<li><strong>Monitor what matters</strong> - Focus on metrics that impact user experience and business outcomes</li>
+<li><strong>Make monitoring actionable</strong> - Every alert should have a clear action</li>
+<li><strong>Design for observability</strong> - Build observability into systems from the beginning</li>
+<li><strong>Context is king</strong> - Provide context to make monitoring meaningful</li>
+<li><strong>Continuous improvement</strong> - Continuously refine monitoring based on incidents</li>
+</ol>
+<h2 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h2>
+<p>Continue to <a href="./system-considerations-79-deployment-operations.html">Deployment and Operations</a> to learn about deployment strategies and operational excellence.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="system-considerations-77-security-considerations.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="system-considerations-79-deployment-operations.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="system-considerations-77-security-considerations.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="system-considerations-79-deployment-operations.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

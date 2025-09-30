@@ -1,0 +1,407 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Context is Everything - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="context-is-everything"><a class="header" href="#context-is-everything">Context is Everything</a></h1>
+<p>The practices in this guide are presented as patterns that have worked in specific contexts, not as universal rules. Your team's context includes many factors that determine which approaches will work best for your situation.</p>
+<h2 id="key-context-factors"><a class="header" href="#key-context-factors">Key Context Factors</a></h2>
+<h3 id="project-size-and-complexity"><a class="header" href="#project-size-and-complexity">Project Size and Complexity</a></h3>
+<p>The scale and intricacy of your software system significantly impacts which practices are appropriate:</p>
+<ul>
+<li><strong>Small projects</strong> (1-5 developers, simple requirements) can benefit from lightweight processes and minimal ceremony</li>
+<li><strong>Medium projects</strong> (5-20 developers, moderate complexity) need more structure but should avoid over-engineering</li>
+<li><strong>Large projects</strong> (20+ developers, high complexity) require robust processes, clear architecture, and comprehensive testing</li>
+</ul>
+<h3 id="team-experience-and-expertise"><a class="header" href="#team-experience-and-expertise">Team Experience and Expertise</a></h3>
+<p>The skill level and background of your development team:</p>
+<ul>
+<li><strong>Junior teams</strong> need more guidance, code reviews, and structured processes</li>
+<li><strong>Mixed teams</strong> benefit from mentorship, clear standards, and gradual responsibility</li>
+<li><strong>Senior teams</strong> can operate with more autonomy and lighter processes</li>
+</ul>
+<h3 id="business-domain-and-requirements"><a class="header" href="#business-domain-and-requirements">Business Domain and Requirements</a></h3>
+<p>The specific industry and functional needs of your application:</p>
+<ul>
+<li><strong>Internal tools</strong> can prioritize speed and flexibility over polish and documentation</li>
+<li><strong>Customer-facing products</strong> need higher quality, better UX, and more thorough testing</li>
+<li><strong>Regulated industries</strong> (finance, healthcare) require additional compliance, security, and auditability</li>
+</ul>
+<h3 id="performance-and-reliability-needs"><a class="header" href="#performance-and-reliability-needs">Performance and Reliability Needs</a></h3>
+<p>The operational requirements and service level expectations:</p>
+<ul>
+<li><strong>Non-critical systems</strong> can tolerate occasional downtime and slower performance</li>
+<li><strong>Business-critical systems</strong> need high availability, monitoring, and performance optimization</li>
+<li><strong>Life-critical systems</strong> require formal methods, extensive testing, and rigorous processes</li>
+</ul>
+<h3 id="time-and-resource-constraints"><a class="header" href="#time-and-resource-constraints">Time and Resource Constraints</a></h3>
+<p>The budget, timeline, and available personnel:</p>
+<ul>
+<li><strong>Startup environments</strong> prioritize speed to market and rapid iteration</li>
+<li><strong>Enterprise environments</strong> balance speed with stability and compliance</li>
+<li><strong>Resource-constrained projects</strong> must make careful trade-offs between scope and quality</li>
+</ul>
+<h2 id="context-examples"><a class="header" href="#context-examples">Context Examples</a></h2>
+<h3 id="startup-vs-enterprise"><a class="header" href="#startup-vs-enterprise">Startup vs. Enterprise</a></h3>
+<p><strong>Startup Context:</strong></p>
+<ul>
+<li>Small team, limited resources</li>
+<li>Rapid iteration and pivoting</li>
+<li>Uncertain requirements</li>
+<li>Focus on speed and learning</li>
+</ul>
+<p><strong>Enterprise Context:</strong></p>
+<ul>
+<li>Large team, established processes</li>
+<li>Stable requirements and long-term planning</li>
+<li>Regulatory compliance needs</li>
+<li>Focus on stability and scalability</li>
+</ul>
+<p>What works for a startup building an MVP won't work for a financial institution handling transactions.</p>
+<h3 id="solo-developer-vs-distributed-team"><a class="header" href="#solo-developer-vs-distributed-team">Solo Developer vs. Distributed Team</a></h3>
+<p><strong>Solo Developer Context:</strong></p>
+<ul>
+<li>Complete autonomy and control</li>
+<li>Direct communication with stakeholders</li>
+<li>Simple coordination needs</li>
+<li>Flexible decision-making</li>
+</ul>
+<p><strong>Distributed Team Context:</strong></p>
+<ul>
+<li>Multiple stakeholders and decision-makers</li>
+<li>Complex communication requirements</li>
+<li>Need for clear processes and documentation</li>
+<li>Coordination overhead and potential conflicts</li>
+</ul>
+<p>What works for a solo developer won't work for a distributed team of 50 engineers.</p>
+<h3 id="different-project-types"><a class="header" href="#different-project-types">Different Project Types</a></h3>
+<p><strong>Research Project:</strong></p>
+<ul>
+<li>Exploratory nature</li>
+<li>Changing requirements</li>
+<li>Focus on discovery and learning</li>
+<li>Tolerance for experimentation and failure</li>
+</ul>
+<p><strong>Production System:</strong></p>
+<ul>
+<li>Well-defined requirements</li>
+<li>Focus on reliability and performance</li>
+<li>Need for maintainability and scalability</li>
+<li>Low tolerance for failures</li>
+</ul>
+<p><strong>Internal Tool:</strong></p>
+<ul>
+<li>Limited user base</li>
+<li>Direct feedback loop</li>
+<li>Flexible requirements</li>
+<li>Focus on functionality over polish</li>
+</ul>
+<p><strong>Customer Product:</strong></p>
+<ul>
+<li>Large user base</li>
+<li>Indirect feedback mechanisms</li>
+<li>Stable requirements</li>
+<li>Focus on UX, performance, and reliability</li>
+</ul>
+<h2 id="the-context-practice-matrix"><a class="header" href="#the-context-practice-matrix">The Context-Practice Matrix</a></h2>
+<p>Different contexts call for different practices. Here's how context affects practice selection:</p>
+<div class="table-wrapper"><table><thead><tr><th>Context Factor</th><th>Lightweight Practice</th><th>Heavyweight Practice</th></tr></thead><tbody>
+<tr><td><strong>Team Size</strong></td><td>Small teams (1-5)</td><td>Large teams (20+)</td></tr>
+<tr><td><strong>Project Criticality</strong></td><td>Internal tools</td><td>Customer-facing systems</td></tr>
+<tr><td><strong>Requirements Stability</strong></td><td>Research/exploratory</td><td>Well-established domains</td></tr>
+<tr><td><strong>Time Pressure</strong></td><td>Startup/rapid iteration</td><td>Enterprise/long-term</td></tr>
+<tr><td><strong>Team Experience</strong></td><td>Senior engineers</td><td>Junior/mixed teams</td></tr>
+</tbody></table>
+</div>
+<h2 id="assessing-your-context"><a class="header" href="#assessing-your-context">Assessing Your Context</a></h2>
+<p>To determine which practices are right for your team, ask these questions:</p>
+<h3 id="project-assessment"><a class="header" href="#project-assessment">Project Assessment</a></h3>
+<ul>
+<li>How many developers are working on this project?</li>
+<li>How complex are the requirements?</li>
+<li>How stable are the requirements likely to be?</li>
+<li>What's the expected lifespan of this project?</li>
+</ul>
+<h3 id="team-assessment"><a class="header" href="#team-assessment">Team Assessment</a></h3>
+<ul>
+<li>What's the experience level of your team members?</li>
+<li>How well do team members know each other?</li>
+<li>What's the team's track record with similar projects?</li>
+<li>How distributed is your team (geographically and temporally)?</li>
+</ul>
+<h3 id="business-assessment"><a class="header" href="#business-assessment">Business Assessment</a></h3>
+<ul>
+<li>How critical is this system to the business?</li>
+<li>Who are the users of this system?</li>
+<li>What are the consequences of failures or bugs?</li>
+<li>What are the compliance and regulatory requirements?</li>
+</ul>
+<h3 id="operational-assessment"><a class="header" href="#operational-assessment">Operational Assessment</a></h3>
+<ul>
+<li>What are the performance requirements?</li>
+<li>What are the availability requirements?</li>
+<li>What are the security requirements?</li>
+<li>What are the maintenance and support expectations?</li>
+</ul>
+<h2 id="evolving-context"><a class="header" href="#evolving-context">Evolving Context</a></h2>
+<p>Context is not static—it evolves over time. As your project grows and changes, your practices should evolve too:</p>
+<h3 id="growth-triggers"><a class="header" href="#growth-triggers">Growth Triggers</a></h3>
+<ul>
+<li><strong>Team growth</strong>: Adding more developers often requires more structure</li>
+<li><strong>User growth</strong>: More users often require better performance and reliability</li>
+<li><strong>Feature growth</strong>: More features often require better architecture and organization</li>
+<li><strong>Business growth</strong>: Business success often brings more scrutiny and compliance needs</li>
+</ul>
+<h3 id="evolution-strategies"><a class="header" href="#evolution-strategies">Evolution Strategies</a></h3>
+<ul>
+<li><strong>Gradual evolution</strong>: Add practices incrementally as needed</li>
+<li><strong>Periodic review</strong>: Regularly assess if your current practices are still appropriate</li>
+<li><strong>Context-aware adaptation</strong>: Be willing to change practices when context changes</li>
+<li><strong>Learning from experience</strong>: Use successes and failures to refine your approach</li>
+</ul>
+<h2 id="next"><a class="header" href="#next">Next</a></h2>
+<p>Continue to <a href="./principles-vs-practices-03-balancing-principles.html">The Engineer's Dilemma: Balancing Contradictory Principles</a> to learn how to navigate the contradictory principles that exist in software engineering.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="principles-vs-practices-01-danger-of-dogmatism.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="principles-vs-practices-03-balancing-principles.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="principles-vs-practices-01-danger-of-dogmatism.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="principles-vs-practices-03-balancing-principles.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

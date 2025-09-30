@@ -1,0 +1,837 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Security Considerations - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="77-security-considerations"><a class="header" href="#77-security-considerations">7.7 Security Considerations</a></h1>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>Security considerations are fundamental to system design and must be addressed throughout the entire development lifecycle. Building secure systems requires a proactive approach that integrates security practices into every aspect of system architecture and implementation.</p>
+<h2 id="security-philosophy"><a class="header" href="#security-philosophy">Security Philosophy</a></h2>
+<p>"Security is not a feature—it's a fundamental requirement. The most secure systems are designed with security in mind from day one, not bolted on as an afterthought."</p>
+<h3 id="security-principles"><a class="header" href="#security-principles">Security Principles</a></h3>
+<p><strong>Principle 1: Defense in Depth</strong>
+"Never rely on a single security control. Layer multiple security measures so that if one fails, others still provide protection."</p>
+<p><strong>Principle 2: Least Privilege</strong>
+"Grant only the minimum permissions necessary for components to function. Excessive privileges create unnecessary security risks."</p>
+<p><strong>Principle 3: Zero Trust</strong>
+"Trust nothing, verify everything. Assume that your network is already compromised and design accordingly."</p>
+<p><strong>Principle 4: Security by Design</strong>
+"Build security into your architecture from the beginning. Security considerations should drive architectural decisions, not the other way around."</p>
+<p><strong>Principle 5: Continuous Security</strong>
+"Security is not a one-time activity. Continuously monitor, test, and improve your security posture."</p>
+<h2 id="authentication-and-authorization"><a class="header" href="#authentication-and-authorization">Authentication and Authorization</a></h2>
+<h3 id="authentication-strategies"><a class="header" href="#authentication-strategies">Authentication Strategies</a></h3>
+<p><strong>Multi-Factor Authentication</strong></p>
+<pre><code class="language-python"># Recommended approach for multi-factor authentication
+class MultiFactorAuthenticator:
+    def __init__(self, password_auth, totp_auth, backup_codes):
+        self.password_auth = password_auth
+        self.totp_auth = totp_auth
+        self.backup_codes = backup_codes
+        self.attempt_tracker = AttemptTracker()
+    
+    def authenticate(self, username, password, totp_code=None, backup_code=None):
+        """Authenticate user with multiple factors"""
+        # Check rate limiting
+        if self.attempt_tracker.is_rate_limited(username):
+            raise RateLimitExceededError()
+        
+        # First factor: password
+        if not self.password_auth.verify(username, password):
+            self.attempt_tracker.record_failed_attempt(username)
+            raise AuthenticationError("Invalid credentials")
+        
+        # Second factor: TOTP or backup code
+        if totp_code:
+            if not self.totp_auth.verify(username, totp_code):
+                self.attempt_tracker.record_failed_attempt(username)
+                raise AuthenticationError("Invalid TOTP code")
+        elif backup_code:
+            if not self.backup_codes.verify(username, backup_code):
+                self.attempt_tracker.record_failed_attempt(username)
+                raise AuthenticationError("Invalid backup code")
+        else:
+            raise AuthenticationError("Second factor required")
+        
+        # Reset failed attempts on successful authentication
+        self.attempt_tracker.reset_attempts(username)
+        
+        return AuthenticationResult(success=True, user=username)
+</code></pre>
+<p><strong>JWT Token Management</strong></p>
+<pre><code class="language-python"># Recommended approach for JWT token management
+class JWTTokenManager:
+    def __init__(self, secret_key, algorithm='HS256'):
+        self.secret_key = secret_key
+        self.algorithm = algorithm
+        self.token_blacklist = TokenBlacklist()
+    
+    def generate_token(self, user_id, roles=None, expires_in=3600):
+        """Generate JWT token with claims"""
+        now = datetime.utcnow()
+        payload = {
+            'sub': user_id,
+            'iat': now,
+            'exp': now + timedelta(seconds=expires_in),
+            'roles': roles or []
+        }
+        
+        token = jwt.encode(payload, self.secret_key, algorithm=self.algorithm)
+        return token
+    
+    def verify_token(self, token):
+        """Verify JWT token and return payload"""
+        try:
+            # Check if token is blacklisted
+            if self.token_blacklist.is_blacklisted(token):
+                raise TokenRevokedError()
+            
+            # Decode and verify token
+            payload = jwt.decode(
+                token, 
+                self.secret_key, 
+                algorithms=[self.algorithm]
+            )
+            
+            return payload
+            
+        except jwt.ExpiredSignatureError:
+            raise TokenExpiredError()
+        except jwt.InvalidTokenError:
+            raise InvalidTokenError()
+    
+    def revoke_token(self, token):
+        """Revoke JWT token"""
+        try:
+            payload = jwt.decode(
+                token, 
+                self.secret_key, 
+                algorithms=[self.algorithm],
+                options={'verify_exp': False}
+            )
+            
+            self.token_blacklist.add_to_blacklist(token, payload['exp'])
+            
+        except jwt.InvalidTokenError:
+            raise InvalidTokenError()
+</code></pre>
+<h3 id="authorization-patterns"><a class="header" href="#authorization-patterns">Authorization Patterns</a></h3>
+<p><strong>Role-Based Access Control (RBAC)</strong></p>
+<pre><code class="language-python"># Recommended approach for role-based access control
+class RBACManager:
+    def __init__(self):
+        self.roles = {}
+        self.permissions = {}
+        self.user_roles = {}
+    
+    def define_role(self, role_name, permissions):
+        """Define role with associated permissions"""
+        self.roles[role_name] = set(permissions)
+    
+    def assign_role_to_user(self, user_id, role_name):
+        """Assign role to user"""
+        if role_name not in self.roles:
+            raise RoleNotFoundError()
+        
+        if user_id not in self.user_roles:
+            self.user_roles[user_id] = set()
+        
+        self.user_roles[user_id].add(role_name)
+    
+    def check_permission(self, user_id, permission):
+        """Check if user has specific permission"""
+        if user_id not in self.user_roles:
+            return False
+        
+        user_permissions = set()
+        for role in self.user_roles[user_id]:
+            user_permissions.update(self.roles.get(role, set()))
+        
+        return permission in user_permissions
+    
+    def get_user_permissions(self, user_id):
+        """Get all permissions for user"""
+        if user_id not in self.user_roles:
+            return set()
+        
+        permissions = set()
+        for role in self.user_roles[user_id]:
+            permissions.update(self.roles.get(role, set()))
+        
+        return permissions
+</code></pre>
+<p><strong>Attribute-Based Access Control (ABAC)</strong></p>
+<pre><code class="language-python"># Recommended approach for attribute-based access control
+class ABACManager:
+    def __init__(self):
+        self.policies = []
+        self.attribute_store = AttributeStore()
+    
+    def add_policy(self, policy):
+        """Add access control policy"""
+        self.policies.append(policy)
+    
+    def evaluate_access(self, user_id, resource, action):
+        """Evaluate access request against policies"""
+        # Get user attributes
+        user_attributes = self.attribute_store.get_user_attributes(user_id)
+        
+        # Get resource attributes
+        resource_attributes = self.attribute_store.get_resource_attributes(resource)
+        
+        # Get environment attributes
+        env_attributes = self.attribute_store.get_environment_attributes()
+        
+        # Evaluate all policies
+        for policy in self.policies:
+            result = policy.evaluate(
+                user_attributes,
+                resource_attributes,
+                env_attributes,
+                action
+            )
+            
+            if result == Decision.DENY:
+                return False
+            elif result == Decision.ALLOW:
+                return True
+        
+        # Default deny
+        return False
+</code></pre>
+<h2 id="data-protection"><a class="header" href="#data-protection">Data Protection</a></h2>
+<h3 id="encryption-strategies"><a class="header" href="#encryption-strategies">Encryption Strategies</a></h3>
+<p><strong>Data Encryption at Rest</strong></p>
+<pre><code class="language-python"># Recommended approach for data encryption at rest
+class DataEncryptionManager:
+    def __init__(self, key_manager):
+        self.key_manager = key_manager
+        self.encryption_cache = {}
+    
+    def encrypt_data(self, data, key_id=None):
+        """Encrypt data using specified key"""
+        if key_id is None:
+            key_id = self.key_manager.get_default_key_id()
+        
+        # Get encryption key
+        key = self.key_manager.get_key(key_id)
+        
+        # Generate random IV
+        iv = os.urandom(16)
+        
+        # Encrypt data
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        
+        # Pad data to block size
+        padded_data = self._pad_data(data)
+        
+        # Encrypt
+        encrypted_data = cipher.encrypt(padded_data)
+        
+        # Return IV + encrypted data
+        return iv + encrypted_data
+    
+    def decrypt_data(self, encrypted_data, key_id=None):
+        """Decrypt data using specified key"""
+        if key_id is None:
+            key_id = self.key_manager.get_default_key_id()
+        
+        # Get encryption key
+        key = self.key_manager.get_key(key_id)
+        
+        # Extract IV and encrypted data
+        iv = encrypted_data[:16]
+        ciphertext = encrypted_data[16:]
+        
+        # Decrypt
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_data = cipher.decrypt(ciphertext)
+        
+        # Unpad data
+        return self._unpad_data(decrypted_data)
+    
+    def _pad_data(self, data):
+        """Pad data to block size"""
+        padding_length = 16 - (len(data) % 16)
+        padding = bytes([padding_length] * padding_length)
+        return data + padding
+    
+    def _unpad_data(self, padded_data):
+        """Remove padding from data"""
+        padding_length = padded_data[-1]
+        return padded_data[:-padding_length]
+</code></pre>
+<p><strong>Data Encryption in Transit</strong></p>
+<pre><code class="language-python"># Recommended approach for data encryption in transit
+class SecureCommunicationManager:
+    def __init__(self, cert_manager):
+        self.cert_manager = cert_manager
+        self.tls_config = TLSConfig()
+    
+    def create_secure_server(self, host, port):
+        """Create secure server with TLS"""
+        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        
+        # Load server certificate and private key
+        context.load_cert_chain(
+            certfile=self.cert_manager.get_server_cert_path(),
+            keyfile=self.cert_manager.get_server_key_path()
+        )
+        
+        # Configure TLS settings
+        context.set_ciphers(self.tls_config.get_secure_ciphers())
+        context.minimum_version = ssl.TLSVersion.TLSv1_2
+        
+        # Create server socket
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind((host, port))
+        server_socket.listen(5)
+        
+        # Wrap with SSL
+        secure_server = context.wrap_socket(
+            server_socket,
+            server_side=True
+        )
+        
+        return secure_server
+    
+    def create_secure_client(self, host, port):
+        """Create secure client with TLS"""
+        context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+        
+        # Load CA certificates
+        context.load_verify_locations(
+            cafile=self.cert_manager.get_ca_cert_path()
+        )
+        
+        # Configure TLS settings
+        context.set_ciphers(self.tls_config.get_secure_ciphers())
+        context.minimum_version = ssl.TLSVersion.TLSv1_2
+        
+        # Create client socket
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+        # Wrap with SSL
+        secure_client = context.wrap_socket(
+            client_socket,
+            server_hostname=host
+        )
+        
+        secure_client.connect((host, port))
+        
+        return secure_client
+</code></pre>
+<h3 id="data-masking-and-anonymization"><a class="header" href="#data-masking-and-anonymization">Data Masking and Anonymization</a></h3>
+<p><strong>Data Masking Strategy</strong></p>
+<pre><code class="language-python"># Recommended approach for data masking
+class DataMaskingManager:
+    def __init__(self):
+        self.masking_rules = {}
+        self.masking_cache = {}
+    
+    def add_masking_rule(self, field_name, masking_type, **kwargs):
+        """Add masking rule for field"""
+        rule = MaskingRule(
+            field_name=field_name,
+            masking_type=masking_type,
+            **kwargs
+        )
+        self.masking_rules[field_name] = rule
+    
+    def mask_data(self, data):
+        """Mask sensitive data according to rules"""
+        masked_data = data.copy()
+        
+        for field_name, rule in self.masking_rules.items():
+            if field_name in masked_data:
+                masked_value = self._apply_masking_rule(
+                    masked_data[field_name],
+                    rule
+                )
+                masked_data[field_name] = masked_value
+        
+        return masked_data
+    
+    def _apply_masking_rule(self, value, rule):
+        """Apply specific masking rule to value"""
+        if rule.masking_type == 'partial':
+            return self._partial_mask(value, rule)
+        elif rule.masking_type == 'complete':
+            return self._complete_mask(value, rule)
+        elif rule.masking_type == 'hash':
+            return self._hash_mask(value, rule)
+        elif rule.masking_type == 'format_preserving':
+            return self._format_preserving_mask(value, rule)
+        else:
+            raise UnknownMaskingTypeError(rule.masking_type)
+    
+    def _partial_mask(self, value, rule):
+        """Partially mask value (e.g., credit card numbers)"""
+        value_str = str(value)
+        visible_chars = rule.get('visible_chars', 4)
+        
+        if len(value_str) &lt;= visible_chars:
+            return '*' * len(value_str)
+        
+        masked_part = '*' * (len(value_str) - visible_chars)
+        visible_part = value_str[-visible_chars:]
+        
+        return masked_part + visible_part
+    
+    def _complete_mask(self, value, rule):
+        """Completely mask value"""
+        return rule.get('mask_char', '*') * len(str(value))
+    
+    def _hash_mask(self, value, rule):
+        """Hash value for consistent masking"""
+        hash_algorithm = rule.get('hash_algorithm', 'sha256')
+        salt = rule.get('salt', '')
+        
+        value_str = str(value) + salt
+        hashed = hashlib.hashlib(hash_algorithm).hexdigest()
+        
+        return hashed[:len(str(value))]
+</code></pre>
+<h2 id="security-monitoring"><a class="header" href="#security-monitoring">Security Monitoring</a></h2>
+<h3 id="intrusion-detection"><a class="header" href="#intrusion-detection">Intrusion Detection</a></h3>
+<p><strong>Intrusion Detection System</strong></p>
+<pre><code class="language-python"># Recommended approach for intrusion detection
+class IntrusionDetectionSystem:
+    def __init__(self):
+        self.anomaly_detector = AnomalyDetector()
+        self.signature_detector = SignatureDetector()
+        self.behavior_analyzer = BehaviorAnalyzer()
+        self.alert_manager = AlertManager()
+    
+    def analyze_request(self, request):
+        """Analyze request for security threats"""
+        threats = []
+        
+        # Signature-based detection
+        signature_threats = self.signature_detector.detect(request)
+        threats.extend(signature_threats)
+        
+        # Anomaly-based detection
+        anomaly_threats = self.anomaly_detector.detect(request)
+        threats.extend(anomaly_threats)
+        
+        # Behavior-based detection
+        behavior_threats = self.behavior_analyzer.detect(request)
+        threats.extend(behavior_threats)
+        
+        # Generate alerts for detected threats
+        for threat in threats:
+            self.alert_manager.send_alert(
+                f"Security threat detected: {threat.type}",
+                threat.details
+            )
+        
+        return threats
+    
+    def analyze_user_behavior(self, user_id, actions):
+        """Analyze user behavior for anomalies"""
+        behavior_profile = self.behavior_analyzer.get_profile(user_id)
+        
+        anomalies = []
+        for action in actions:
+            if not behavior_profile.is_normal(action):
+                anomalies.append(action)
+        
+        if len(anomalies) &gt; self.behavior_analyzer.get_threshold():
+            self.alert_manager.send_alert(
+                f"Anomalous behavior detected for user {user_id}",
+                f"Detected {len(anomalies)} anomalous actions"
+            )
+        
+        return anomalies
+</code></pre>
+<h3 id="security-logging"><a class="header" href="#security-logging">Security Logging</a></h3>
+<p><strong>Security Logging Manager</strong></p>
+<pre><code class="language-python"># Recommended approach for security logging
+class SecurityLoggingManager:
+    def __init__(self):
+        self.log_formatter = SecurityLogFormatter()
+        self.log_aggregator = LogAggregator()
+        self.log_retention = LogRetentionManager()
+    
+    def log_security_event(self, event_type, details, user_id=None):
+        """Log security event with proper formatting"""
+        event = SecurityEvent(
+            timestamp=datetime.utcnow(),
+            event_type=event_type,
+            details=details,
+            user_id=user_id,
+            source_ip=self._get_source_ip(),
+            session_id=self._get_session_id()
+        )
+        
+        # Format log entry
+        log_entry = self.log_formatter.format(event)
+        
+        # Send to log aggregator
+        self.log_aggregator.send(log_entry)
+        
+        # Check for immediate alerts
+        self._check_for_alerts(event)
+    
+    def query_security_logs(self, query):
+        """Query security logs"""
+        return self.log_aggregator.query(query)
+    
+    def _check_for_alerts(self, event):
+        """Check if event requires immediate alert"""
+        if event.event_type in ['failed_login', 'privilege_escalation', 'data_breach']:
+            self.alert_manager.send_alert(
+                f"Critical security event: {event.event_type}",
+                event.details
+            )
+</code></pre>
+<h2 id="security-testing"><a class="header" href="#security-testing">Security Testing</a></h2>
+<h3 id="vulnerability-scanning"><a class="header" href="#vulnerability-scanning">Vulnerability Scanning</a></h3>
+<p><strong>Vulnerability Scanner</strong></p>
+<pre><code class="language-python"># Recommended approach for vulnerability scanning
+class VulnerabilityScanner:
+    def __init__(self):
+        self.scanners = {
+            'network': NetworkScanner(),
+            'web': WebScanner(),
+            'dependency': DependencyScanner(),
+            'configuration': ConfigurationScanner()
+        }
+        self.vulnerability_db = VulnerabilityDatabase()
+    
+    def scan_system(self, target, scan_types=None):
+        """Scan system for vulnerabilities"""
+        if scan_types is None:
+            scan_types = ['network', 'web', 'dependency', 'configuration']
+        
+        vulnerabilities = []
+        
+        for scan_type in scan_types:
+            scanner = self.scanners.get(scan_type)
+            if scanner:
+                results = scanner.scan(target)
+                vulnerabilities.extend(results)
+        
+        # Analyze and prioritize vulnerabilities
+        prioritized_vulns = self._prioritize_vulnerabilities(vulnerabilities)
+        
+        return prioritized_vulns
+    
+    def _prioritize_vulnerabilities(self, vulnerabilities):
+        """Prioritize vulnerabilities based on risk"""
+        prioritized = []
+        
+        for vuln in vulnerabilities:
+            risk_score = self._calculate_risk_score(vuln)
+            vuln.risk_score = risk_score
+            prioritized.append(vuln)
+        
+        # Sort by risk score (highest first)
+        prioritized.sort(key=lambda x: x.risk_score, reverse=True)
+        
+        return prioritized
+    
+    def _calculate_risk_score(self, vulnerability):
+        """Calculate risk score for vulnerability"""
+        cvss_score = vulnerability.cvss_score or 0
+        exploitability = vulnerability.exploitability or 0
+        impact = vulnerability.impact or 0
+        
+        # Weighted risk calculation
+        risk_score = (cvss_score * 0.5) + (exploitability * 0.3) + (impact * 0.2)
+        
+        return risk_score
+</code></pre>
+<h3 id="penetration-testing"><a class="header" href="#penetration-testing">Penetration Testing</a></h3>
+<p><strong>Penetration Testing Framework</strong></p>
+<pre><code class="language-python"># Recommended approach for penetration testing
+class PenetrationTestingFramework:
+    def __init__(self):
+        self.test_modules = {
+            'reconnaissance': ReconnaissanceModule(),
+            'scanning': ScanningModule(),
+            'exploitation': ExploitationModule(),
+            'post_exploitation': PostExploitationModule()
+        }
+        self.report_generator = ReportGenerator()
+    
+    def conduct_penetration_test(self, target, scope):
+        """Conduct comprehensive penetration test"""
+        results = PenTestResults(target=target, scope=scope)
+        
+        # Phase 1: Reconnaissance
+        recon_results = self.test_modules['reconnaissance'].execute(target)
+        results.add_phase_results('reconnaissance', recon_results)
+        
+        # Phase 2: Scanning
+        scan_results = self.test_modules['scanning'].execute(target, recon_results)
+        results.add_phase_results('scanning', scan_results)
+        
+        # Phase 3: Exploitation
+        exploit_results = self.test_modules['exploitation'].execute(target, scan_results)
+        results.add_phase_results('exploitation', exploit_results)
+        
+        # Phase 4: Post-exploitation
+        post_results = self.test_modules['post_exploitation'].execute(target, exploit_results)
+        results.add_phase_results('post_exploitation', post_results)
+        
+        # Generate report
+        report = self.report_generator.generate(results)
+        
+        return results, report
+</code></pre>
+<h2 id="key-takeaways"><a class="header" href="#key-takeaways">Key Takeaways</a></h2>
+<ol>
+<li><strong>Security by design</strong> - Build security into your architecture from the beginning</li>
+<li><strong>Defense in depth</strong> - Layer multiple security measures for comprehensive protection</li>
+<li><strong>Zero trust</strong> - Verify everything and trust nothing</li>
+<li><strong>Continuous security</strong> - Monitor, test, and improve security continuously</li>
+<li><strong>Data protection</strong> - Encrypt data at rest and in transit, implement proper access controls</li>
+</ol>
+<h2 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h2>
+<p>Continue to <a href="./system-considerations-78-monitoring-observability.html">7.8 Monitoring and Observability</a> to learn about monitoring strategies and observability patterns.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="system-considerations-76-resilience-fault-tolerance.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="system-considerations-78-monitoring-observability.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="system-considerations-76-resilience-fault-tolerance.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="system-considerations-78-monitoring-observability.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

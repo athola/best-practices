@@ -1,0 +1,385 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Inclusive Language Guidelines - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="inclusive-language-guidelines"><a class="header" href="#inclusive-language-guidelines">Inclusive Language Guidelines</a></h1>
+<h2 id="gender-neutral-language"><a class="header" href="#gender-neutral-language">Gender-Neutral Language</a></h2>
+<p>Use gender-neutral language to create inclusive documentation that welcomes all readers.</p>
+<h3 id="gendered-language-avoid"><a class="header" href="#gendered-language-avoid">Gendered Language (Avoid):</a></h3>
+<blockquote>
+<p>"Each developer should commit his changes regularly."</p>
+</blockquote>
+<h3 id="gender-neutral-language-preferred"><a class="header" href="#gender-neutral-language-preferred">Gender-Neutral Language (Preferred):</a></h3>
+<blockquote>
+<p>"Each developer should commit their changes regularly."
+"Developers should commit their changes regularly."</p>
+</blockquote>
+<h3 id="strategies-for-gender-neutral-writing"><a class="header" href="#strategies-for-gender-neutral-writing">Strategies for Gender-Neutral Writing:</a></h3>
+<ul>
+<li><strong>Use singular "they"</strong> as a gender-neutral pronoun</li>
+<li><strong>Rephrase to plural</strong> when possible to avoid pronoun issues</li>
+<li><strong>Use "you"</strong> for direct address to readers</li>
+<li><strong>Choose gender-neutral occupational terms</strong> ("chairperson" instead of "chairman")</li>
+</ul>
+<h3 id="examples-of-gender-neutral-language"><a class="header" href="#examples-of-gender-neutral-language">Examples of Gender-Neutral Language:</a></h3>
+<p><strong>Instead of:</strong></p>
+<ul>
+<li>"He/She should review the code"</li>
+<li>"The chairman will lead the meeting"</li>
+<li>"A salesman should understand customer needs"</li>
+</ul>
+<p><strong>Use:</strong></p>
+<ul>
+<li>"They should review the code"</li>
+<li>"The chairperson will lead the meeting"</li>
+<li>"A sales representative should understand customer needs"</li>
+</ul>
+<h2 id="bias-free-communication"><a class="header" href="#bias-free-communication">Bias-Free Communication</a></h2>
+<p>Eliminate biased language that could exclude or offend readers based on age, disability, race, ethnicity, gender, sexual orientation, or socioeconomic status.</p>
+<h3 id="biased-language-avoid"><a class="header" href="#biased-language-avoid">Biased Language (Avoid):</a></h3>
+<blockquote>
+<p>"Even a novice can master this simple concept."</p>
+</blockquote>
+<h3 id="bias-free-language-preferred"><a class="header" href="#bias-free-language-preferred">Bias-Free Language (Preferred):</a></h3>
+<blockquote>
+<p>"Users with any experience level can master this concept."</p>
+</blockquote>
+<h3 id="bias-free-writing-principles"><a class="header" href="#bias-free-writing-principles">Bias-Free Writing Principles:</a></h3>
+<ul>
+<li><strong>Focus on abilities rather than limitations</strong> ("accessible to users with visual impairments" instead of "for blind users")</li>
+<li><strong>Avoid age-related assumptions</strong> ("experienced users" instead of "old users")</li>
+<li><strong>Use person-first language</strong> ("person with a disability" instead of "disabled person")</li>
+<li><strong>Avoid cultural stereotypes</strong> and assumptions about readers' backgrounds</li>
+</ul>
+<h3 id="common-bias-patterns-to-avoid"><a class="header" href="#common-bias-patterns-to-avoid">Common Bias Patterns to Avoid:</a></h3>
+<p><strong>Ability Bias:</strong></p>
+<ul>
+<li>Avoid: "crippled system," "blind spot"</li>
+<li>Use: "non-functional system," "unmonitored area"</li>
+</ul>
+<p><strong>Age Bias:</strong></p>
+<ul>
+<li>Avoid: "old users," "senior citizens"</li>
+<li>Use: "experienced users," "older adults"</li>
+</ul>
+<p><strong>Cultural Bias:</strong></p>
+<ul>
+<li>Avoid: "foreign concepts," "exotic features"</li>
+<li>Use: "unfamiliar concepts," "unique features"</li>
+</ul>
+<p><strong>Socioeconomic Bias:</strong></p>
+<ul>
+<li>Avoid: "cheap solution," "expensive option"</li>
+<li>Use: "cost-effective solution," "premium option"</li>
+</ul>
+<h2 id="cultural-sensitivity"><a class="header" href="#cultural-sensitivity">Cultural Sensitivity</a></h2>
+<p>Create documentation that respects cultural differences and avoids culturally specific references that may not translate well.</p>
+<h3 id="cultural-sensitivity-guidelines"><a class="header" href="#cultural-sensitivity-guidelines">Cultural Sensitivity Guidelines:</a></h3>
+<ul>
+<li><strong>Avoid idioms and slang</strong> that may not translate across cultures</li>
+<li><strong>Use examples that are globally relevant</strong> rather than culturally specific</li>
+<li><strong>Be mindful of date formats, time zones, and measurement units</strong></li>
+<li><strong>Consider color symbolism</strong> and cultural associations in visual elements</li>
+</ul>
+<h3 id="global-communication-strategies"><a class="header" href="#global-communication-strategies">Global Communication Strategies:</a></h3>
+<p><strong>Date and Time:</strong></p>
+<ul>
+<li>Use ISO format (YYYY-MM-DD) for dates</li>
+<li>Specify time zones explicitly</li>
+<li>Avoid culturally specific holidays in examples</li>
+</ul>
+<p><strong>Measurements and Units:</strong></p>
+<ul>
+<li>Provide both metric and imperial units when appropriate</li>
+<li>Avoid culture-specific measurements (e.g., "football field length")</li>
+<li>Use universal standards (e.g., "100 meters" instead of "328 feet")</li>
+</ul>
+<p><strong>Examples and Scenarios:</strong></p>
+<ul>
+<li>Use globally recognizable names and places</li>
+<li>Avoid culture-specific humor or references</li>
+<li>Choose examples that work across different regions</li>
+</ul>
+<h2 id="accessibility-considerations"><a class="header" href="#accessibility-considerations">Accessibility Considerations</a></h2>
+<p>Ensure your documentation is accessible to users with different abilities and needs.</p>
+<h3 id="accessibility-guidelines"><a class="header" href="#accessibility-guidelines">Accessibility Guidelines:</a></h3>
+<ul>
+<li><strong>Provide alternative text</strong> for images and diagrams</li>
+<li><strong>Use descriptive link text</strong> rather than "click here"</li>
+<li><strong>Ensure sufficient color contrast</strong> for text readability</li>
+<li><strong>Structure content logically</strong> for screen readers</li>
+<li><strong>Provide captions and transcripts</strong> for multimedia content</li>
+</ul>
+<h3 id="inclusive-design-principles"><a class="header" href="#inclusive-design-principles">Inclusive Design Principles:</a></h3>
+<ul>
+<li><strong>Multiple ways to access information</strong> (visual, auditory, textual)</li>
+<li><strong>Clear navigation</strong> and consistent structure</li>
+<li><strong>Predictable interaction patterns</strong> throughout the documentation</li>
+<li><strong>Error prevention</strong> and clear error messages</li>
+<li><strong>Flexibility in presentation</strong> to accommodate different needs</li>
+</ul>
+<h2 id="continuous-improvement"><a class="header" href="#continuous-improvement">Continuous Improvement</a></h2>
+<p>Creating inclusive documentation is an ongoing process that requires continuous learning and improvement.</p>
+<h3 id="improvement-strategies"><a class="header" href="#improvement-strategies">Improvement Strategies:</a></h3>
+<ul>
+<li><strong>Seek feedback</strong> from diverse user groups</li>
+<li><strong>Stay informed</strong> about inclusive language best practices</li>
+<li><strong>Review and update</strong> documentation regularly</li>
+<li><strong>Create style guides</strong> that include inclusive language guidelines</li>
+<li><strong>Train team members</strong> on inclusive communication practices</li>
+</ul>
+<h3 id="resources-for-learning"><a class="header" href="#resources-for-learning">Resources for Learning:</a></h3>
+<ul>
+<li><strong>Style guides</strong> from major tech companies (Microsoft, Google, Apple)</li>
+<li><strong>Accessibility standards</strong> (WCAG, Section 508)</li>
+<li><strong>Inclusive language resources</strong> from professional organizations</li>
+<li><strong>Community feedback</strong> and user testing results</li>
+<li><strong>Academic research</strong> on inclusive communication</li>
+</ul>
+<h2 id="next"><a class="header" href="#next">Next</a></h2>
+<p>Continue to <a href="./documentation-05-types-standards.html">Documentation Types and Standards</a> to learn about specific guidance for different documentation formats, or return to the main <a href="./documentation.html">Documentation Standards</a> chapter.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="documentation-03-writing-style.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="documentation-05-types-standards.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="documentation-03-writing-style.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="documentation-05-types-standards.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

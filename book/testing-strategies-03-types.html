@@ -1,0 +1,414 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Types of Tests and Their Purpose - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="types-of-tests-and-their-purpose"><a class="header" href="#types-of-tests-and-their-purpose">Types of Tests and Their Purpose</a></h1>
+<p>Understanding the different types of tests and their appropriate use cases is fundamental to building an effective testing strategy. Each test type serves specific purposes and provides different kinds of confidence about your software.</p>
+<h2 id="the-testing-taxonomy"><a class="header" href="#the-testing-taxonomy">The Testing Taxonomy</a></h2>
+<p>Tests can be categorized along several dimensions:</p>
+<p><strong>By Scope</strong></p>
+<ul>
+<li><strong>Unit Tests</strong>: Test individual components in isolation</li>
+<li><strong>Integration Tests</strong>: Test interactions between components</li>
+<li><strong>End-to-End Tests</strong>: Test complete user workflows</li>
+<li><strong>System Tests</strong>: Test the entire system as a whole</li>
+</ul>
+<p><strong>By Purpose</strong></p>
+<ul>
+<li><strong>Functional Tests</strong>: Verify that the software does what it's supposed to do</li>
+<li><strong>Non-Functional Tests</strong>: Verify quality attributes like performance, security, usability</li>
+<li><strong>Regression Tests</strong>: Ensure that changes don't break existing functionality</li>
+<li><strong>Acceptance Tests</strong>: Verify that the software meets business requirements</li>
+</ul>
+<p><strong>By Timing</strong></p>
+<ul>
+<li><strong>Static Tests</strong>: Analyze code without executing it (linting, type checking)</li>
+<li><strong>Dynamic Tests</strong>: Execute code to verify behavior (unit tests, integration tests)</li>
+<li><strong>Continuous Tests</strong>: Run automatically on code changes</li>
+<li><strong>Periodic Tests</strong>: Run on a schedule (performance tests, security scans)</li>
+</ul>
+<p><strong>By Approach</strong></p>
+<ul>
+<li><strong>Black Box Tests</strong>: Test without knowledge of internal implementation</li>
+<li><strong>White Box Tests</strong>: Test with knowledge of internal implementation</li>
+<li><strong>Gray Box Tests</strong>: Test with partial knowledge of internal implementation</li>
+<li><strong>Exploratory Tests</strong>: Unscripted testing based on tester intuition and experience</li>
+</ul>
+<p>"Effective testing strategies use a balanced mix of test types, each chosen for the specific value it provides. No single test type can provide complete confidence in software quality."</p>
+<h2 id="unit-tests-the-foundation"><a class="header" href="#unit-tests-the-foundation">Unit Tests: The Foundation</a></h2>
+<p>Unit tests are the building blocks of a comprehensive testing strategy. They test individual components (functions, methods, classes) in isolation from their dependencies.</p>
+<p><strong>Characteristics of Good Unit Tests</strong></p>
+<ul>
+<li><strong>Fast</strong>: Execute quickly (milliseconds)</li>
+<li><strong>Isolated</strong>: Test one thing at a time</li>
+<li><strong>Repeatable</strong>: Produce the same results every time</li>
+<li><strong>Independent</strong>: Don't depend on test execution order</li>
+<li><strong>Clear</strong>: Easy to understand what they're testing and why</li>
+</ul>
+<p><strong>What to Unit Test</strong></p>
+<ul>
+<li><strong>Core Business Logic</strong>: Algorithms, calculations, data transformations</li>
+<li><strong>Edge Cases</strong>: Boundary conditions, error handling, invalid inputs</li>
+<li><strong>Critical Paths</strong>: Code that, if broken, would cause serious problems</li>
+<li><strong>Complex Logic</strong>: Code that's hard to understand or get right</li>
+</ul>
+<p><strong>What NOT to Unit Test</strong></p>
+<ul>
+<li><strong>Trivial Code</strong>: Simple getters/setters, basic constructors</li>
+<li><strong>External Dependencies</strong>: Database calls, network requests, file I/O</li>
+<li><strong>UI Code</strong>: Rendering, user interactions (use integration tests instead)</li>
+<li><strong>Configuration</strong>: Environment setup, dependency injection</li>
+</ul>
+<p><strong>Unit Test Best Practices</strong></p>
+<ul>
+<li><strong>Arrange-Act-Assert</strong>: Structure tests clearly with setup, execution, and verification</li>
+<li><strong>Descriptive Names</strong>: Use names that describe what behavior is being tested</li>
+<li><strong>One Assertion Per Test</strong>: Focus on verifying one behavior at a time</li>
+<li><strong>Mock Dependencies</strong>: Use mocks to isolate the unit under test</li>
+<li><strong>Test Both Success and Failure</strong>: Verify both happy paths and error conditions</li>
+</ul>
+<p>"Unit tests are your first line of defense against bugs. They provide fast feedback and catch issues early, when they're cheapest to fix. A strong unit test suite is the foundation of any effective testing strategy."</p>
+<h2 id="integration-tests-verify-components-work-together"><a class="header" href="#integration-tests-verify-components-work-together">Integration Tests: Verify Components Work Together</a></h2>
+<p>Integration tests verify that different components of your system work together correctly. They test the interactions between units, rather than the units themselves.</p>
+<p><strong>Types of Integration Tests</strong></p>
+<ul>
+<li><strong>Component Integration</strong>: Test interactions between related components</li>
+<li><strong>Service Integration</strong>: Test interactions with external services</li>
+<li><strong>Database Integration</strong>: Test interactions with databases</li>
+<li><strong>API Integration</strong>: Test interactions between services via APIs</li>
+</ul>
+<p><strong>What Integration Tests Should Verify</strong></p>
+<ul>
+<li><strong>Data Flow</strong>: That data passes correctly between components</li>
+<li><strong>Protocol Compliance</strong>: That components communicate using expected protocols</li>
+<li><strong>Error Handling</strong>: That errors are properly propagated and handled</li>
+<li><strong>Performance</strong>: That interactions meet performance requirements</li>
+<li><strong>Contract Compliance</strong>: That components adhere to their interfaces</li>
+</ul>
+<p><strong>Integration Test Challenges</strong></p>
+<ul>
+<li><strong>Setup Complexity</strong>: Often require complex setup and teardown</li>
+<li><strong>Execution Speed</strong>: Typically slower than unit tests</li>
+<li><strong>Flakiness</strong>: More prone to intermittent failures due to external dependencies</li>
+<li><strong>Environment Dependencies</strong>: May require specific environments or configurations</li>
+<li><strong>Data Management</strong>: Often require careful test data management</li>
+</ul>
+<p><strong>Integration Test Best Practices</strong></p>
+<ul>
+<li><strong>Isolate Test Environments</strong>: Use dedicated test databases and services</li>
+<li><strong>Manage Test Data</strong>: Create and clean up test data systematically</li>
+<li><strong>Handle Timeouts</strong>: Set appropriate timeouts for external calls</li>
+<li><strong>Mock External Dependencies</strong>: When possible, mock external services</li>
+<li><strong>Test Failure Scenarios</strong>: Verify graceful handling of failures</li>
+</ul>
+<p>"Integration tests catch the kinds of bugs that unit tests miss: integration issues, protocol mismatches, data format problems, and other interaction-related defects. They provide confidence that your components work together as expected."</p>
+<h2 id="end-to-end-tests-verify-user-scenarios"><a class="header" href="#end-to-end-tests-verify-user-scenarios">End-to-End Tests: Verify User Scenarios</a></h2>
+<p>End-to-end (E2E) tests verify complete user workflows by simulating real user interactions with your application. They test the entire system from the user's perspective.</p>
+<p><strong>Characteristics of E2E Tests</strong></p>
+<ul>
+<li><strong>User-Focused</strong>: Test complete user scenarios and workflows</li>
+<li><strong>Realistic</strong>: Use real browsers, devices, or user interfaces</li>
+<li><strong>Comprehensive</strong>: Test the entire application stack</li>
+<li><strong>Slow</strong>: Typically the slowest type of test</li>
+<li><strong>Valuable</strong>: Provide the highest level of confidence</li>
+</ul>
+<p><strong>What E2E Tests Should Cover</strong></p>
+<ul>
+<li><strong>Critical User Journeys</strong>: The most important user workflows</li>
+<li><strong>Happy Paths</strong>: Successful completion of user tasks</li>
+<li><strong>Error Scenarios</strong>: How the application handles user errors</li>
+<li><strong>Cross-Browser/Device</strong>: Compatibility across different environments</li>
+<li><strong>Performance</strong>: User-perceived performance and responsiveness</li>
+</ul>
+<p><strong>E2E Test Tools and Approaches</strong></p>
+<ul>
+<li><strong>Browser Automation</strong>: Selenium, Cypress, Playwright, Puppeteer</li>
+<li><strong>Mobile Testing</strong>: Appium, Espresso, XCTest</li>
+<li><strong>API Testing</strong>: Postman, REST-assured, Supertest</li>
+<li><strong>Visual Testing</strong>: Percy, Applitools, BackstopJS</li>
+<li><strong>Performance Testing</strong>: Lighthouse, WebPageTest, k6</li>
+</ul>
+<p><strong>E2E Test Best Practices</strong></p>
+<ul>
+<li><strong>Focus on Critical Paths</strong>: Test the most important user journeys</li>
+<li><strong>Use Page Objects</strong>: Abstract page interactions for maintainability</li>
+<li><strong>Handle Asynchronous Operations</strong>: Wait for dynamic content to load</li>
+<li><strong>Manage Test Data</strong>: Create realistic test data scenarios</li>
+<li><strong>Run in CI/CD</strong>: Automate E2E tests in your deployment pipeline</li>
+</ul>
+<p>"E2E tests provide the ultimate confidence that your application works from the user's perspective. They catch integration issues, UI problems, and workflow defects that other test types might miss. However, they're also the most expensive and time-consuming to write and maintain, so use them strategically."</p>
+<h2 id="balancing-the-test-pyramid"><a class="header" href="#balancing-the-test-pyramid">Balancing the Test Pyramid</a></h2>
+<p>The test pyramid is a model that describes the ideal distribution of different test types in a comprehensive testing strategy.</p>
+<p><strong>The Classic Test Pyramid</strong></p>
+<ul>
+<li><strong>Base (70%)</strong>: Unit tests - fast, isolated, numerous</li>
+<li><strong>Middle (20%)</strong>: Integration tests - slower, more complex, fewer</li>
+<li><strong>Top (10%)</strong>: E2E tests - slowest, most complex, fewest</li>
+</ul>
+<p><strong>Why the Pyramid Shape Matters</strong></p>
+<ul>
+<li><strong>Feedback Speed</strong>: Unit tests provide fast feedback, E2E tests provide slow feedback</li>
+<li><strong>Maintenance Cost</strong>: Unit tests are cheap to maintain, E2E tests are expensive</li>
+<li><strong>Execution Time</strong>: Unit tests run quickly, E2E tests take time</li>
+<li><strong>Defect Localization</strong>: Unit tests pinpoint defects, E2E tests require investigation</li>
+</ul>
+<p><strong>Modern Variations</strong></p>
+<ul>
+<li><strong>Testing Trophy</strong>: Expands the pyramid to include contract tests and static analysis</li>
+<li><strong>Testing Honeycomb</strong>: Emphasizes more integration tests and fewer E2E tests</li>
+<li><strong>Custom Pyramids</strong>: Adapted based on application type and team needs</li>
+</ul>
+<p><strong>Balancing Your Test Strategy</strong></p>
+<ul>
+<li><strong>Start with Unit Tests</strong>: Build a strong foundation of fast, reliable tests</li>
+<li><strong>Add Integration Tests</strong>: Verify component interactions and integrations</li>
+<li><strong>Use E2E Tests Sparingly</strong>: Focus on critical user journeys</li>
+<li><strong>Monitor and Adjust</strong>: Regularly review and adjust your test strategy</li>
+<li><strong>Consider Context</strong>: Adapt the pyramid based on your application type</li>
+</ul>
+<p>"The test pyramid isn't a rigid rule—it's a guideline. The right balance depends on your application type, team structure, risk tolerance, and business context. The key is to be intentional about your test distribution and regularly evaluate whether it's providing the right balance of coverage, speed, and confidence."</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="testing-strategies-02-design.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="testing-strategies-04-contexts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="testing-strategies-02-design.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="testing-strategies-04-contexts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

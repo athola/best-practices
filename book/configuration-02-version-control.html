@@ -1,0 +1,474 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Version Control Systems - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="version-control-systems"><a class="header" href="#version-control-systems">Version Control Systems</a></h1>
+<p>Version control is the foundation of modern configuration management. It provides the mechanisms for tracking changes, coordinating work among multiple developers, and maintaining the history of a project's evolution.</p>
+<h2 id="centralized-version-control"><a class="header" href="#centralized-version-control">Centralized Version Control</a></h2>
+<p>Traditional systems like SVN use a central server model:</p>
+<pre><code>Working Copy → Central Server → Working Copy
+</code></pre>
+<h3 id="how-centralized-systems-work"><a class="header" href="#how-centralized-systems-work">How Centralized Systems Work</a></h3>
+<p>In centralized version control, there is a single central server that stores the entire version history of the project. Developers check out working copies from this server, make changes locally, and then commit those changes back to the central server.</p>
+<h3 id="advantages-of-centralized-systems"><a class="header" href="#advantages-of-centralized-systems">Advantages of Centralized Systems</a></h3>
+<p><strong>Simplicity</strong></p>
+<ul>
+<li>Easy to understand and implement</li>
+<li>Clear mental model for new users</li>
+<li>Straightforward administration</li>
+</ul>
+<p><strong>Fine-grained Access Control</strong></p>
+<ul>
+<li>Granular permissions at the directory and file level</li>
+<li>Easy to implement security policies</li>
+<li>Centralized user management</li>
+</ul>
+<p><strong>Centralized Backup</strong></p>
+<ul>
+<li>Single point of backup</li>
+<li>Consistent state across all users</li>
+<li>Easier disaster recovery</li>
+</ul>
+<h3 id="disadvantages-of-centralized-systems"><a class="header" href="#disadvantages-of-centralized-systems">Disadvantages of Centralized Systems</a></h3>
+<p><strong>Single Point of Failure</strong></p>
+<ul>
+<li>If the central server goes down, all work stops</li>
+<li>Network dependency for most operations</li>
+<li>No offline work capability</li>
+</ul>
+<p><strong>Performance Issues</strong></p>
+<ul>
+<li>Operations can be slow for large projects</li>
+<li>Network latency affects all operations</li>
+<li>Scaling challenges for large teams</li>
+</ul>
+<p><strong>Limited Branching and Merging</strong></p>
+<ul>
+<li>Branching is often expensive and cumbersome</li>
+<li>Merging can be difficult and error-prone</li>
+<li>Limited support for parallel development</li>
+</ul>
+<h3 id="popular-centralized-systems"><a class="header" href="#popular-centralized-systems">Popular Centralized Systems</a></h3>
+<p><strong>Apache Subversion (SVN)</strong></p>
+<ul>
+<li>Mature and stable</li>
+<li>Good for binary files</li>
+<li>Still used in some enterprise environments</li>
+</ul>
+<p><strong>Perforce Helix Core</strong></p>
+<ul>
+<li>Excellent for large binary assets</li>
+<li>Strong in game development and large enterprises</li>
+<li>Advanced branching and merging capabilities</li>
+</ul>
+<p><strong>CVS (Concurrent Versions System)</strong></p>
+<ul>
+<li>One of the first version control systems</li>
+<li>Largely obsolete now</li>
+<li>Historical significance in version control evolution</li>
+</ul>
+<h2 id="distributed-version-control"><a class="header" href="#distributed-version-control">Distributed Version Control</a></h2>
+<p>Modern systems like Git use a distributed model:</p>
+<pre><code>Local Repository ↔ Remote Repository
+</code></pre>
+<h3 id="how-distributed-systems-work"><a class="header" href="#how-distributed-systems-work">How Distributed Systems Work</a></h3>
+<p>In distributed version control, every developer has a complete copy of the entire repository, including the full history of the project. Developers work locally and can synchronize with remote repositories when needed.</p>
+<h3 id="advantages-of-distributed-systems"><a class="header" href="#advantages-of-distributed-systems">Advantages of Distributed Systems</a></h3>
+<p><strong>Offline Work Capability</strong></p>
+<ul>
+<li>Full functionality without network connection</li>
+<li>Commit, branch, and merge locally</li>
+<li>Work from anywhere, anytime</li>
+</ul>
+<p><strong>Faster Operations</strong></p>
+<ul>
+<li>Most operations are performed locally</li>
+<li>No network latency for common operations</li>
+<li>Better performance for large projects</li>
+</ul>
+<p><strong>Better Branching and Merging</strong></p>
+<ul>
+<li>Cheap and easy branching</li>
+<li>Powerful merging capabilities</li>
+<li>Excellent support for parallel development</li>
+</ul>
+<p><strong>No Single Point of Failure</strong></p>
+<ul>
+<li>Every clone is a full backup</li>
+<li>Work can continue if remote repository is unavailable</li>
+<li>Better resilience and reliability</li>
+</ul>
+<h3 id="disadvantages-of-distributed-systems"><a class="header" href="#disadvantages-of-distributed-systems">Disadvantages of Distributed Systems</a></h3>
+<p><strong>Steeper Learning Curve</strong></p>
+<ul>
+<li>More complex concepts to understand</li>
+<li>Different mental model than centralized systems</li>
+<li>Can be overwhelming for beginners</li>
+</ul>
+<p><strong>Larger Repository Sizes</strong></p>
+<ul>
+<li>Every clone contains the full history</li>
+<li>More disk space required</li>
+<li>Can be slow for very large repositories</li>
+</ul>
+<p><strong>More Complex Workflows</strong></p>
+<ul>
+<li>Multiple ways to collaborate</li>
+<li>Need to understand distributed concepts</li>
+<li>More decision points in workflow design</li>
+</ul>
+<h3 id="popular-distributed-systems"><a class="header" href="#popular-distributed-systems">Popular Distributed Systems</a></h3>
+<p><strong>Git</strong></p>
+<ul>
+<li>De facto standard for version control</li>
+<li>Created by Linus Torvalds for Linux kernel development</li>
+<li>Massive ecosystem and community support</li>
+</ul>
+<p><strong>Mercurial</strong></p>
+<ul>
+<li>Simpler than Git</li>
+<li>Cross-platform support</li>
+<li>Used by some large projects (Facebook, Mozilla)</li>
+</ul>
+<p><strong>Bazaar</strong></p>
+<ul>
+<li>User-friendly interface</li>
+<li>Good for smaller teams</li>
+<li>Less popular than Git or Mercurial</li>
+</ul>
+<h2 id="choosing-the-right-version-control-system"><a class="header" href="#choosing-the-right-version-control-system">Choosing the Right Version Control System</a></h2>
+<p>The choice between centralized and distributed version control depends on several factors:</p>
+<h3 id="project-size-and-complexity"><a class="header" href="#project-size-and-complexity">Project Size and Complexity</a></h3>
+<p><strong>Small Projects</strong></p>
+<ul>
+<li>Centralized systems may be sufficient</li>
+<li>Simpler to manage and understand</li>
+<li>Less overhead for small teams</li>
+</ul>
+<p><strong>Large Projects</strong></p>
+<ul>
+<li>Distributed systems scale better</li>
+<li>Better performance for large codebases</li>
+<li>More robust for complex workflows</li>
+</ul>
+<h3 id="team-structure-and-distribution"><a class="header" href="#team-structure-and-distribution">Team Structure and Distribution</a></h3>
+<p><strong>Co-located Teams</strong></p>
+<ul>
+<li>Centralized systems can work well</li>
+<li>Network issues are less common</li>
+<li>Easier to coordinate</li>
+</ul>
+<p><strong>Distributed Teams</strong></p>
+<ul>
+<li>Distributed systems are essential</li>
+<li>Offline work capability is crucial</li>
+<li>Better support for async collaboration</li>
+</ul>
+<h3 id="industry-and-domain"><a class="header" href="#industry-and-domain">Industry and Domain</a></h3>
+<p><strong>Enterprise Environments</strong></p>
+<ul>
+<li>Centralized systems still common</li>
+<li>Integration with existing enterprise tools</li>
+<li>Compliance and security requirements</li>
+</ul>
+<p><strong>Open Source and Web</strong></p>
+<ul>
+<li>Distributed systems dominate</li>
+<li>GitHub/GitLab ecosystem</li>
+<li>Community collaboration features</li>
+</ul>
+<h2 id="migration-strategies"><a class="header" href="#migration-strategies">Migration Strategies</a></h2>
+<p>Organizations often need to migrate between version control systems:</p>
+<h3 id="from-centralized-to-distributed"><a class="header" href="#from-centralized-to-distributed">From Centralized to Distributed</a></h3>
+<p><strong>Planning Phase</strong></p>
+<ul>
+<li>Assess current repository structure</li>
+<li>Identify migration tools and scripts</li>
+<li>Plan for team training and workflow changes</li>
+</ul>
+<p><strong>Execution Phase</strong></p>
+<ul>
+<li>Use migration tools (git-svn, etc.)</li>
+<li>Preserve history and metadata</li>
+<li>Test thoroughly before cutover</li>
+</ul>
+<p><strong>Post-Migration</strong></p>
+<ul>
+<li>Provide training and documentation</li>
+<li>Monitor for issues and concerns</li>
+<li>Gradually adopt new workflows</li>
+</ul>
+<h3 id="best-practices-for-migration"><a class="header" href="#best-practices-for-migration">Best Practices for Migration</a></h3>
+<p><strong>Preserve History</strong></p>
+<ul>
+<li>Maintain complete commit history</li>
+<li>Preserve author information and timestamps</li>
+<li>Keep branches and tags intact</li>
+</ul>
+<p><strong>Minimize Disruption</strong></p>
+<ul>
+<li>Plan migration during low-activity periods</li>
+<li>Provide parallel access during transition</li>
+<li>Have rollback procedures ready</li>
+</ul>
+<p><strong>Team Preparation</strong></p>
+<ul>
+<li>Train team on new system before migration</li>
+<li>Document new workflows and processes</li>
+<li>Provide support during transition</li>
+</ul>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>Version control systems are the foundation of modern configuration management. While distributed systems like Git have become the de facto standard, centralized systems still have their place in certain contexts.</p>
+<p>The key is to choose the right system for your specific needs and to implement it effectively. Good version control practices enable:</p>
+<ul>
+<li><strong>Collaboration</strong>: Multiple developers can work together effectively</li>
+<li><strong>Tracking</strong>: Complete history of all changes and decisions</li>
+<li><strong>Flexibility</strong>: Support for different workflows and processes</li>
+<li><strong>Reliability</strong>: Protection against data loss and corruption</li>
+</ul>
+<p>As we move forward, version control continues to evolve with new features and capabilities, but the fundamental principles remain the same: provide a reliable way to track changes and coordinate work among developers.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="configuration-01-why-matters.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="configuration-03-branching-strategies.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="configuration-01-why-matters.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="configuration-03-branching-strategies.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Infrastructure and Network Security - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="infrastructure-and-network-security"><a class="header" href="#infrastructure-and-network-security">Infrastructure and Network Security</a></h1>
+<p>Infrastructure security forms the foundation of a comprehensive security strategy. It encompasses the protection of networks, servers, cloud resources, and the underlying systems that support your applications and data.</p>
+<h2 id="network-security-fundamentals"><a class="header" href="#network-security-fundamentals">Network Security Fundamentals</a></h2>
+<h3 id="network-segmentation"><a class="header" href="#network-segmentation">Network Segmentation</a></h3>
+<ul>
+<li><strong>Zoned Architecture</strong>: Divide networks into security zones (DMZ, internal, trusted)</li>
+<li><strong>Micro-segmentation</strong>: Implement fine-grained segmentation within zones</li>
+<li><strong>Zero Trust</strong>: Verify every request regardless of source</li>
+<li><strong>Access Control Lists</strong>: Implement strict ACLs between network segments</li>
+</ul>
+<h3 id="firewall-configuration"><a class="header" href="#firewall-configuration">Firewall Configuration</a></h3>
+<ul>
+<li><strong>Default Deny</strong>: Block all traffic by default, allow only what's necessary</li>
+<li><strong>Stateful Inspection</strong>: Monitor connection states and context</li>
+<li><strong>Application Layer Filtering</strong>: Filter traffic based on application protocols</li>
+<li><strong>Regular Reviews</strong>: Update firewall rules regularly to remove unused rules</li>
+</ul>
+<h3 id="intrusion-detection-and-prevention"><a class="header" href="#intrusion-detection-and-prevention">Intrusion Detection and Prevention</a></h3>
+<ul>
+<li><strong>Network IDS/IPS</strong>: Monitor network traffic for suspicious patterns</li>
+<li><strong>Host-based IDS/IPS</strong>: Monitor individual systems for malicious activity</li>
+<li><strong>Signature-based Detection</strong>: Use known attack signatures</li>
+<li><strong>Anomaly-based Detection</strong>: Identify unusual behavior patterns</li>
+</ul>
+<h2 id="cloud-security"><a class="header" href="#cloud-security">Cloud Security</a></h2>
+<h3 id="cloud-security-principles"><a class="header" href="#cloud-security-principles">Cloud Security Principles</a></h3>
+<ul>
+<li><strong>Shared Responsibility Model</strong>: Understand cloud provider vs. customer responsibilities</li>
+<li><strong>Defense in Depth</strong>: Implement multiple layers of security controls</li>
+<li><strong>Least Privilege</strong>: Grant minimum necessary permissions</li>
+<li><strong>Continuous Monitoring</strong>: Monitor cloud environments continuously</li>
+</ul>
+<h3 id="cloud-provider-security"><a class="header" href="#cloud-provider-security">Cloud Provider Security</a></h3>
+<ul>
+<li><strong>AWS Security</strong>: IAM, VPC, Security Groups, CloudTrail, GuardDuty</li>
+<li><strong>Azure Security</strong>: Azure AD, Network Security Groups, Sentinel, Security Center</li>
+<li><strong>GCP Security</strong>: IAM, VPC, Cloud Audit Logs, Security Command Center</li>
+<li><strong>Multi-cloud Strategy</strong>: Implement consistent security across providers</li>
+</ul>
+<h3 id="cloud-configuration-management"><a class="header" href="#cloud-configuration-management">Cloud Configuration Management</a></h3>
+<ul>
+<li><strong>Infrastructure as Code (IaC)</strong>: Use Terraform, CloudFormation, or ARM templates</li>
+<li><strong>Configuration Scanning</strong>: Regularly scan for misconfigurations</li>
+<li><strong>Compliance Monitoring</strong>: Ensure compliance with security standards</li>
+<li><strong>Automated Remediation</strong>: Automatically fix common misconfigurations</li>
+</ul>
+<h2 id="server-security"><a class="header" href="#server-security">Server Security</a></h2>
+<h3 id="operating-system-hardening"><a class="header" href="#operating-system-hardening">Operating System Hardening</a></h3>
+<ul>
+<li><strong>Minimal Installation</strong>: Install only necessary packages and services</li>
+<li><strong>Regular Updates</strong>: Keep systems patched and up-to-date</li>
+<li><strong>Secure Configuration</strong>: Apply security baselines and hardening guides</li>
+<li><strong>Service Management</strong>: Disable unnecessary services and daemons</li>
+</ul>
+<h3 id="access-control"><a class="header" href="#access-control">Access Control</a></h3>
+<ul>
+<li><strong>SSH Security</strong>: Use key-based authentication, disable password auth</li>
+<li><strong>Privilege Management</strong>: Use sudo for administrative access</li>
+<li><strong>User Management</strong>: Regularly review and remove unnecessary user accounts</li>
+<li><strong>Session Management</strong>: Implement session timeouts and locking</li>
+</ul>
+<h3 id="file-system-security"><a class="header" href="#file-system-security">File System Security</a></h3>
+<ul>
+<li><strong>Permission Management</strong>: Use principle of least privilege for file access</li>
+<li><strong>File Integrity Monitoring</strong>: Monitor critical system files for changes</li>
+<li><strong>Encryption</strong>: Encrypt sensitive data at rest</li>
+<li><strong>Backup Security</strong>: Secure backups and test restoration procedures</li>
+</ul>
+<h2 id="container-security"><a class="header" href="#container-security">Container Security</a></h2>
+<h3 id="container-image-security"><a class="header" href="#container-image-security">Container Image Security</a></h3>
+<ul>
+<li><strong>Image Scanning</strong>: Scan images for vulnerabilities before deployment</li>
+<li><strong>Minimal Base Images</strong>: Use minimal, trusted base images</li>
+<li><strong>Immutable Infrastructure</strong>: Treat containers as immutable</li>
+<li><strong>Registry Security</strong>: Secure container registries with access controls</li>
+</ul>
+<h3 id="container-runtime-security"><a class="header" href="#container-runtime-security">Container Runtime Security</a></h3>
+<ul>
+<li><strong>Runtime Protection</strong>: Monitor container behavior during execution</li>
+<li><strong>Resource Limits</strong>: Implement resource limits to prevent DoS</li>
+<li><strong>Network Policies</strong>: Implement network policies for container communication</li>
+<li><strong>Secrets Management</strong>: Use proper secrets management, not environment variables</li>
+</ul>
+<h3 id="orchestration-security"><a class="header" href="#orchestration-security">Orchestration Security</a></h3>
+<ul>
+<li><strong>Kubernetes Security</strong>: Implement RBAC, Network Policies, Pod Security Policies</li>
+<li><strong>Cluster Hardening</strong>: Secure Kubernetes cluster components</li>
+<li><strong>Workload Isolation</strong>: Use namespaces and other isolation mechanisms</li>
+<li><strong>Audit Logging</strong>: Enable comprehensive audit logging</li>
+</ul>
+<h2 id="identity-and-access-management-iam"><a class="header" href="#identity-and-access-management-iam">Identity and Access Management (IAM)</a></h2>
+<h3 id="authentication"><a class="header" href="#authentication">Authentication</a></h3>
+<ul>
+<li><strong>Multi-Factor Authentication (MFA)</strong>: Require MFA for all administrative access</li>
+<li><strong>Single Sign-On (SSO)</strong>: Implement SSO for simplified user management</li>
+<li><strong>Password Policies</strong>: Enforce strong password requirements</li>
+<li><strong>Biometric Authentication</strong>: Consider biometric factors where appropriate</li>
+</ul>
+<h3 id="authorization"><a class="header" href="#authorization">Authorization</a></h3>
+<ul>
+<li><strong>Role-Based Access Control (RBAC)</strong>: Implement RBAC for fine-grained permissions</li>
+<li><strong>Attribute-Based Access Control (ABAC)</strong>: Use attributes for dynamic access decisions</li>
+<li><strong>Just-in-Time Access</strong>: Grant temporary access when needed</li>
+<li><strong>Access Reviews</strong>: Conduct regular access reviews and certifications</li>
+</ul>
+<h3 id="privileged-access-management"><a class="header" href="#privileged-access-management">Privileged Access Management</a></h3>
+<ul>
+<li><strong>Privileged Account Management</strong>: Secure and monitor privileged accounts</li>
+<li><strong>Session Recording</strong>: Record privileged sessions for audit purposes</li>
+<li><strong>Password Vaulting</strong>: Use password vaults for shared credentials</li>
+<li><strong>Emergency Access</strong>: Implement break-glass procedures for emergency access</li>
+</ul>
+<h2 id="security-monitoring-and-logging"><a class="header" href="#security-monitoring-and-logging">Security Monitoring and Logging</a></h2>
+<h3 id="log-management"><a class="header" href="#log-management">Log Management</a></h3>
+<ul>
+<li><strong>Centralized Logging</strong>: Collect logs from all systems in a central location</li>
+<li><strong>Log Retention</strong>: Implement appropriate log retention policies</li>
+<li><strong>Log Analysis</strong>: Use SIEM tools for log analysis and correlation</li>
+<li><strong>Real-time Monitoring</strong>: Monitor logs in real-time for security events</li>
+</ul>
+<h3 id="security-information-and-event-management-siem"><a class="header" href="#security-information-and-event-management-siem">Security Information and Event Management (SIEM)</a></h3>
+<ul>
+<li><strong>Event Correlation</strong>: Correlate events across multiple systems</li>
+<li><strong>Threat Detection</strong>: Use machine learning for threat detection</li>
+<li><strong>Automated Response</strong>: Implement automated response to security events</li>
+<li><strong>Compliance Reporting</strong>: Generate compliance reports from SIEM data</li>
+</ul>
+<h3 id="intrusion-detection"><a class="header" href="#intrusion-detection">Intrusion Detection</a></h3>
+<ul>
+<li><strong>Network Monitoring</strong>: Monitor network traffic for suspicious activity</li>
+<li><strong>Host Monitoring</strong>: Monitor individual systems for compromise indicators</li>
+<li><strong>Behavioral Analysis</strong>: Analyze user and system behavior patterns</li>
+<li><strong>Threat Intelligence</strong>: Integrate threat intelligence feeds</li>
+</ul>
+<h2 id="disaster-recovery-and-business-continuity"><a class="header" href="#disaster-recovery-and-business-continuity">Disaster Recovery and Business Continuity</a></h2>
+<h3 id="backup-and-recovery"><a class="header" href="#backup-and-recovery">Backup and Recovery</a></h3>
+<ul>
+<li><strong>3-2-1 Rule</strong>: Keep 3 copies, on 2 different media, with 1 off-site</li>
+<li><strong>Regular Testing</strong>: Test backup restoration procedures regularly</li>
+<li><strong>Encryption</strong>: Encrypt backups both in transit and at rest</li>
+<li><strong>Versioning</strong>: Maintain multiple versions of critical data</li>
+</ul>
+<h3 id="high-availability"><a class="header" href="#high-availability">High Availability</a></h3>
+<ul>
+<li><strong>Redundancy</strong>: Implement redundant systems and components</li>
+<li><strong>Load Balancing</strong>: Use load balancers to distribute traffic</li>
+<li><strong>Failover Testing</strong>: Regularly test failover procedures</li>
+<li><strong>Geographic Distribution</strong>: Distribute systems across geographic regions</li>
+</ul>
+<h3 id="incident-response"><a class="header" href="#incident-response">Incident Response</a></h3>
+<ul>
+<li><strong>Incident Response Plan</strong>: Develop and maintain an incident response plan</li>
+<li><strong>Response Team</strong>: Establish an incident response team</li>
+<li><strong>Communication Plan</strong>: Define communication procedures during incidents</li>
+<li><strong>Post-Incident Review</strong>: Conduct reviews after security incidents</li>
+</ul>
+<h2 id="security-automation"><a class="header" href="#security-automation">Security Automation</a></h2>
+<h3 id="configuration-management"><a class="header" href="#configuration-management">Configuration Management</a></h3>
+<ul>
+<li><strong>Automated Provisioning</strong>: Use tools like Ansible, Puppet, or Chef</li>
+<li><strong>Compliance as Code</strong>: Define compliance requirements as code</li>
+<li><strong>Continuous Compliance</strong>: Continuously monitor compliance status</li>
+<li><strong>Automated Remediation</strong>: Automatically fix compliance issues</li>
+</ul>
+<h3 id="security-testing-automation"><a class="header" href="#security-testing-automation">Security Testing Automation</a></h3>
+<ul>
+<li><strong>Continuous Scanning</strong>: Implement continuous vulnerability scanning</li>
+<li><strong>Automated Penetration Testing</strong>: Use automated tools for regular testing</li>
+<li><strong>Integration with CI/CD</strong>: Integrate security testing into CI/CD pipelines</li>
+<li><strong>Security Gates</strong>: Implement security gates in deployment processes</li>
+</ul>
+<h3 id="threat-hunting-automation"><a class="header" href="#threat-hunting-automation">Threat Hunting Automation</a></h3>
+<ul>
+<li><strong>Automated Threat Detection</strong>: Use AI/ML for automated threat detection</li>
+<li><strong>Behavioral Analysis</strong>: Implement automated behavioral analysis</li>
+<li><strong>Threat Intelligence Integration</strong>: Automatically integrate threat intelligence</li>
+<li><strong>Automated Response</strong>: Implement automated response to detected threats</li>
+</ul>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<h3 id="security-architecture"><a class="header" href="#security-architecture">Security Architecture</a></h3>
+<ul>
+<li><strong>Defense in Depth</strong>: Implement multiple layers of security controls</li>
+<li><strong>Least Privilege</strong>: Apply least privilege principle everywhere</li>
+<li><strong>Zero Trust</strong>: Assume breach and verify everything</li>
+<li><strong>Secure by Default</strong>: Configure systems securely by default</li>
+</ul>
+<h3 id="operational-security"><a class="header" href="#operational-security">Operational Security</a></h3>
+<ul>
+<li><strong>Regular Updates</strong>: Keep all systems updated and patched</li>
+<li><strong>Change Management</strong>: Implement formal change management processes</li>
+<li><strong>Incident Response</strong>: Maintain and test incident response capabilities</li>
+<li><strong>Security Awareness</strong>: Train staff on security best practices</li>
+</ul>
+<h3 id="compliance-and-governance"><a class="header" href="#compliance-and-governance">Compliance and Governance</a></h3>
+<ul>
+<li><strong>Regulatory Compliance</strong>: Ensure compliance with relevant regulations</li>
+<li><strong>Security Policies</strong>: Develop and maintain comprehensive security policies</li>
+<li><strong>Regular Audits</strong>: Conduct regular security audits and assessments</li>
+<li><strong>Continuous Improvement</strong>: Continuously improve security posture</li>
+</ul>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>Infrastructure security is a critical component of overall cybersecurity strategy. By implementing comprehensive network security, cloud security, server hardening, container security, identity management, monitoring, and automation, organizations can build a robust security foundation.</p>
+<p>Remember that infrastructure security is not a one-time project but an ongoing process that requires continuous attention, regular updates, and adaptation to new threats and technologies. Make security a core consideration in all infrastructure decisions and operations.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="security-03-data-protection-privacy.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="security-05-security-operations-incident-response.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="security-03-data-protection-privacy.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="security-05-security-operations-incident-response.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

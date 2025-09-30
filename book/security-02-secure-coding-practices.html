@@ -1,0 +1,904 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Secure Coding Practices - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="secure-coding-practices"><a class="header" href="#secure-coding-practices">Secure Coding Practices</a></h1>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>Secure coding practices are essential for developing software that can withstand malicious attacks and protect sensitive data. This section covers fundamental secure coding techniques, common vulnerabilities, and best practices for writing secure code across different programming languages and platforms.</p>
+<h2 id="input-validation-and-output-encoding"><a class="header" href="#input-validation-and-output-encoding">Input Validation and Output Encoding</a></h2>
+<h3 id="input-validation-principles"><a class="header" href="#input-validation-principles">Input Validation Principles</a></h3>
+<p><strong>Validate All Input</strong></p>
+<ul>
+<li>Never trust input from external sources</li>
+<li>Validate for type, length, format, and range</li>
+<li>Use allowlists rather than blocklists</li>
+<li>Validate on both client and server sides</li>
+</ul>
+<p><strong>Common Input Validation Techniques</strong></p>
+<pre><code class="language-python"># Python input validation example
+import re
+
+def validate_email(email):
+    if not email or len(email) &gt; 254:
+        return False
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
+def validate_integer_input(value, min_val=0, max_val=100):
+    try:
+        num = int(value)
+        return min_val &lt;= num &lt;= max_val
+    except (ValueError, TypeError):
+        return False
+</code></pre>
+<p><strong>File Path Validation</strong></p>
+<pre><code class="language-java">// Java file path validation
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public boolean isSafeFilePath(String userPath, String baseDir) {
+    try {
+        Path basePath = Paths.get(baseDir).normalize();
+        Path userPathObj = Paths.get(baseDir, userPath).normalize();
+        return userPathObj.startsWith(basePath);
+    } catch (Exception e) {
+        return false;
+    }
+}
+</code></pre>
+<h3 id="output-encoding"><a class="header" href="#output-encoding">Output Encoding</a></h3>
+<p><strong>Context-Aware Encoding</strong></p>
+<ul>
+<li>HTML encoding for web applications</li>
+<li>URL encoding for parameters</li>
+<li>JavaScript encoding for dynamic content</li>
+<li>CSS encoding for style attributes</li>
+</ul>
+<p><strong>HTML Encoding Example</strong></p>
+<pre><code class="language-javascript">// JavaScript HTML encoding
+function htmlEncode(str) {
+    return str.replace(/&amp;/g, '&amp;amp;')
+              .replace(/&lt;/g, '&amp;lt;')
+              .replace(/&gt;/g, '&amp;gt;')
+              .replace(/"/g, '&amp;quot;')
+              .replace(/'/g, '&amp;#39;');
+}
+
+// Usage in React
+function SafeComponent({ userContent }) {
+    return &lt;div dangerouslySetInnerHTML={{ 
+        __html: htmlEncode(userContent) 
+    }} /&gt;;
+}
+</code></pre>
+<h2 id="authentication-and-session-management"><a class="header" href="#authentication-and-session-management">Authentication and Session Management</a></h2>
+<h3 id="secure-authentication"><a class="header" href="#secure-authentication">Secure Authentication</a></h3>
+<p><strong>Password Storage</strong></p>
+<pre><code class="language-python"># Python password hashing with bcrypt
+import bcrypt
+
+def hash_password(password):
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password.encode('utf-8'), salt)
+
+def verify_password(password, hashed_password):
+    return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+</code></pre>
+<p><strong>Multi-Factor Authentication</strong></p>
+<pre><code class="language-python"># Python TOTP implementation
+import pyotp
+import qrcode
+
+def generate_totp_secret():
+    return pyotp.random_base32()
+
+def generate_totp_qrcode(secret, username):
+    totp = pyotp.TOTP(secret)
+    provisioning_uri = totp.provisioning_uri(username, issuer_name="YourApp")
+    return qrcode.make(provisioning_uri)
+
+def verify_totp(secret, token):
+    totp = pyotp.TOTP(secret)
+    return totp.verify(token, valid_window=1)
+</code></pre>
+<h3 id="session-management"><a class="header" href="#session-management">Session Management</a></h3>
+<p><strong>Secure Session Handling</strong></p>
+<pre><code class="language-python"># Python Flask session security
+from flask import Flask, session
+import secrets
+import datetime
+
+app = Flask(__name__)
+app.secret_key = secrets.token_hex(32)  # Generate secure secret key
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = datetime.timedelta(minutes=30)
+
+# Secure session configuration
+app.config.update(
+    SESSION_COOKIE_SECURE=True,    # Only send over HTTPS
+    SESSION_COOKIE_HTTPONLY=True,  # Prevent JavaScript access
+    SESSION_COOKIE_SAMESITE='Lax'  # CSRF protection
+)
+</code></pre>
+<p><strong>Session Token Generation</strong></p>
+<pre><code class="language-javascript">// Node.js secure session token
+const crypto = require('crypto');
+
+function generateSessionToken() {
+    return crypto.randomBytes(32).toString('hex');
+}
+
+function validateSessionToken(token) {
+    // Validate token format and expiration
+    if (!token || typeof token !== 'string' || token.length !== 64) {
+        return false;
+    }
+    
+    // Check against database and expiration
+    return checkTokenInDatabase(token);
+}
+</code></pre>
+<h2 id="authorization-and-access-control"><a class="header" href="#authorization-and-access-control">Authorization and Access Control</a></h2>
+<h3 id="role-based-access-control-rbac"><a class="header" href="#role-based-access-control-rbac">Role-Based Access Control (RBAC)</a></h3>
+<p><strong>RBAC Implementation</strong></p>
+<pre><code class="language-python"># Python RBAC implementation
+from enum import Enum
+from functools import wraps
+
+class Role(Enum):
+    ADMIN = "admin"
+    USER = "user"
+    GUEST = "guest"
+
+class User:
+    def __init__(self, username, role):
+        self.username = username
+        self.role = role
+
+def require_role(required_role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not hasattr(g, 'user') or g.user.role != required_role:
+                return "Access denied", 403
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+# Usage
+@app.route('/admin')
+@require_role(Role.ADMIN)
+def admin_panel():
+    return "Admin panel"
+</code></pre>
+<h3 id="attribute-based-access-control-abac"><a class="header" href="#attribute-based-access-control-abac">Attribute-Based Access Control (ABAC)</a></h3>
+<p><strong>ABAC Implementation</strong></p>
+<pre><code class="language-java">// Java ABAC example
+public class AccessController {
+    public boolean checkAccess(User user, Resource resource, Action action) {
+        // Check user attributes
+        if (user.getDepartment().equals("HR") &amp;&amp; 
+            resource.getType().equals("employee_record")) {
+            return action.equals(Action.READ);
+        }
+        
+        // Check time-based access
+        if (user.getRole().equals("CONTRACTOR") &amp;&amp; 
+            !isBusinessHours()) {
+            return false;
+        }
+        
+        // Check location-based access
+        if (resource.getSensitivity().equals("HIGH") &amp;&amp; 
+            !user.getLocation().equals("OFFICE")) {
+            return false;
+        }
+        
+        return true;
+    }
+}
+</code></pre>
+<h2 id="cryptography-best-practices"><a class="header" href="#cryptography-best-practices">Cryptography Best Practices</a></h2>
+<h3 id="encryption-implementation"><a class="header" href="#encryption-implementation">Encryption Implementation</a></h3>
+<p><strong>Symmetric Encryption</strong></p>
+<pre><code class="language-python"># Python AES encryption
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import base64
+import os
+
+def generate_key(password: str, salt: bytes = None) -&gt; bytes:
+    if salt is None:
+        salt = os.urandom(16)
+    
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+    )
+    key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
+    return key
+
+def encrypt_data(data: str, key: bytes) -&gt; bytes:
+    f = Fernet(key)
+    return f.encrypt(data.encode())
+
+def decrypt_data(encrypted_data: bytes, key: bytes) -&gt; str:
+    f = Fernet(key)
+    return f.decrypt(encrypted_data).decode()
+</code></pre>
+<p><strong>Asymmetric Encryption</strong></p>
+<pre><code class="language-java">// Java RSA encryption
+import java.security.*;
+import javax.crypto.*;
+import java.util.Base64;
+
+public class RSAEncryption {
+    private KeyPair keyPair;
+    
+    public RSAEncryption() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(2048);
+        this.keyPair = keyGen.generateKeyPair();
+    }
+    
+    public String encrypt(String plaintext) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic());
+        byte[] encryptedBytes = cipher.doFinal(plaintext.getBytes());
+        return Base64.getEncoder().encodeToString(encryptedBytes);
+    }
+    
+    public String decrypt(String ciphertext) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+        cipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(ciphertext));
+        return new String(decryptedBytes);
+    }
+}
+</code></pre>
+<h3 id="hashing-and-digital-signatures"><a class="header" href="#hashing-and-digital-signatures">Hashing and Digital Signatures</a></h3>
+<p><strong>Secure Hashing</strong></p>
+<pre><code class="language-python"># Python secure hashing
+import hashlib
+import hmac
+
+def secure_hash(data: str, salt: str = "") -&gt; str:
+    """SHA-256 with salt"""
+    return hashlib.sha256((data + salt).encode()).hexdigest()
+
+def hmac_sha256(data: str, key: str) -&gt; str:
+    """HMAC for message authentication"""
+    return hmac.new(key.encode(), data.encode(), hashlib.sha256).hexdigest()
+
+def verify_integrity(data: str, expected_hash: str, salt: str = "") -&gt; bool:
+    """Verify data integrity"""
+    actual_hash = secure_hash(data, salt)
+    return hmac.compare_digest(actual_hash, expected_hash)
+</code></pre>
+<h2 id="secure-error-handling-and-logging"><a class="header" href="#secure-error-handling-and-logging">Secure Error Handling and Logging</a></h2>
+<h3 id="secure-error-handling"><a class="header" href="#secure-error-handling">Secure Error Handling</a></h3>
+<p><strong>Error Handling Best Practices</strong></p>
+<pre><code class="language-python"># Python secure error handling
+import logging
+from flask import jsonify
+
+def handle_error(error):
+    # Log detailed error for debugging
+    logging.error(f"Error occurred: {str(error)}", exc_info=True)
+    
+    # Return generic error to client
+    if isinstance(error, ValueError):
+        return jsonify({"error": "Invalid input provided"}), 400
+    elif isinstance(error, PermissionError):
+        return jsonify({"error": "Access denied"}), 403
+    else:
+        return jsonify({"error": "An unexpected error occurred"}), 500
+
+# Usage in API endpoint
+@app.route('/api/data')
+def get_data():
+    try:
+        # Process request
+        result = process_request()
+        return jsonify({"data": result})
+    except Exception as e:
+        return handle_error(e)
+</code></pre>
+<h3 id="secure-logging"><a class="header" href="#secure-logging">Secure Logging</a></h3>
+<p><strong>Logging Best Practices</strong></p>
+<pre><code class="language-python"># Python secure logging
+import logging
+from logging.handlers import RotatingFileHandler
+import json
+
+class SecureFormatter(logging.Formatter):
+    def format(self, record):
+        # Remove sensitive data from log messages
+        message = super().format(record)
+        
+        # Redact sensitive patterns
+        sensitive_patterns = [
+            r'password=[^&amp;\s]+',
+            r'token=[^&amp;\s]+',
+            r'api_key=[^&amp;\s]+',
+            r'credit_card=\d+'
+        ]
+        
+        for pattern in sensitive_patterns:
+            message = re.sub(pattern, '[REDACTED]', message)
+        
+        return message
+
+# Configure secure logging
+def setup_secure_logging():
+    logger = logging.getLogger('secure_app')
+    logger.setLevel(logging.INFO)
+    
+    # File handler with rotation
+    file_handler = RotatingFileHandler(
+        'secure_app.log',
+        maxBytes=10485760,  # 10MB
+        backupCount=5
+    )
+    file_handler.setFormatter(SecureFormatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    ))
+    
+    logger.addHandler(file_handler)
+    return logger
+</code></pre>
+<h2 id="memory-safety-and-buffer-overflow-prevention"><a class="header" href="#memory-safety-and-buffer-overflow-prevention">Memory Safety and Buffer Overflow Prevention</a></h2>
+<h3 id="buffer-overflow-prevention"><a class="header" href="#buffer-overflow-prevention">Buffer Overflow Prevention</a></h3>
+<p><strong>Safe String Operations</strong></p>
+<pre><code class="language-c">// C safe string operations
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+void safe_string_copy(char *dest, const char *src, size_t dest_size) {
+    if (dest == NULL || src == NULL || dest_size == 0) {
+        return;
+    }
+    
+    strncpy(dest, src, dest_size - 1);
+    dest[dest_size - 1] = '\0';
+}
+
+int safe_string_concat(char *dest, const char *src, size_t dest_size) {
+    if (dest == NULL || src == NULL || dest_size == 0) {
+        return -1;
+    }
+    
+    size_t dest_len = strlen(dest);
+    if (dest_len &gt;= dest_size - 1) {
+        return -1;
+    }
+    
+    strncat(dest, src, dest_size - dest_len - 1);
+    return 0;
+}
+</code></pre>
+<p><strong>Memory Management in C++</strong></p>
+<pre><code class="language-cpp">// C++ safe memory management
+#include &lt;memory&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class SafeDataProcessor {
+private:
+    std::vector&lt;std::string&gt; data;
+    std::unique_ptr&lt;int[]&gt; buffer;
+    size_t buffer_size;
+    
+public:
+    SafeDataProcessor(size_t size) : buffer_size(size) {
+        buffer = std::make_unique&lt;int[]&gt;(size);
+    }
+    
+    void addData(const std::string&amp; item) {
+        // Automatic memory management with vector
+        data.push_back(item);
+    }
+    
+    bool processBuffer(size_t index, int value) {
+        if (index &gt;= buffer_size) {
+            return false;  // Bounds checking
+        }
+        buffer[index] = value;
+        return true;
+    }
+    
+    // No need for manual cleanup - RAII handles it
+};
+</code></pre>
+<h3 id="safe-integer-operations"><a class="header" href="#safe-integer-operations">Safe Integer Operations</a></h3>
+<p><strong>Integer Overflow Prevention</strong></p>
+<pre><code class="language-python"># Python safe integer operations
+import sys
+
+def safe_add(a, b):
+    """Safe addition with overflow checking"""
+    result = a + b
+    
+    # Check for overflow
+    if (a &gt; 0 and b &gt; 0 and result &lt; 0) or (a &lt; 0 and b &lt; 0 and result &gt; 0):
+        raise OverflowError("Integer overflow detected")
+    
+    return result
+
+def safe_multiply(a, b):
+    """Safe multiplication with overflow checking"""
+    if a == 0 or b == 0:
+        return 0
+    
+    result = a * b
+    
+    # Check for overflow
+    if (a != 0 and result // a != b):
+        raise OverflowError("Integer overflow detected")
+    
+    return result
+
+def safe_divide(a, b):
+    """Safe division with zero division and overflow checking"""
+    if b == 0:
+        raise ZeroDivisionError("Division by zero")
+    
+    # Check for potential overflow
+    if a == sys.minsize and b == -1:
+        raise OverflowError("Integer overflow detected")
+    
+    return a // b
+</code></pre>
+<h2 id="common-vulnerabilities-and-prevention"><a class="header" href="#common-vulnerabilities-and-prevention">Common Vulnerabilities and Prevention</a></h2>
+<h3 id="sql-injection-prevention"><a class="header" href="#sql-injection-prevention">SQL Injection Prevention</a></h3>
+<p><strong>Parameterized Queries</strong></p>
+<pre><code class="language-python"># Python parameterized queries with SQLAlchemy
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
+
+class SecureDatabase:
+    def __init__(self, connection_string):
+        self.engine = create_engine(connection_string)
+        self.Session = sessionmaker(bind=self.engine)
+    
+    def get_user_by_id(self, user_id):
+        """Safe query with parameterization"""
+        session = self.Session()
+        try:
+            query = text("SELECT * FROM users WHERE id = :user_id")
+            result = session.execute(query, {'user_id': user_id})
+            return result.fetchone()
+        finally:
+            session.close()
+    
+    def search_users(self, search_term):
+        """Safe search with parameterization"""
+        session = self.Session()
+        try:
+            query = text("SELECT * FROM users WHERE username LIKE :search_term")
+            search_pattern = f"%{search_term}%"
+            result = session.execute(query, {'search_term': search_pattern})
+            return result.fetchall()
+        finally:
+            session.close()
+</code></pre>
+<h3 id="cross-site-scripting-xss-prevention"><a class="header" href="#cross-site-scripting-xss-prevention">Cross-Site Scripting (XSS) Prevention</a></h3>
+<p><strong>XSS Prevention Techniques</strong></p>
+<pre><code class="language-javascript">// React XSS prevention
+import React from 'react';
+import DOMPurify from 'dompurify';
+
+function SafeContent({ content }) {
+    // Sanitize HTML content
+    const cleanHTML = DOMPurify.sanitize(content, {
+        ALLOWED_TAGS: ['b', 'i', 'u', 'p', 'br', 'ul', 'ol', 'li'],
+        ALLOWED_ATTR: []
+    });
+    
+    return (
+        &lt;div 
+            className="safe-content"
+            dangerouslySetInnerHTML={{ __html: cleanHTML }}
+        /&gt;
+    );
+}
+
+// Safe URL handling
+function SafeLink({ url, children }) {
+    const validateUrl = (url) =&gt; {
+        try {
+            const parsedUrl = new URL(url);
+            return ['http:', 'https:'].includes(parsedUrl.protocol);
+        } catch {
+            return false;
+        }
+    };
+    
+    if (!validateUrl(url)) {
+        return &lt;span className="invalid-link"&gt;{children}&lt;/span&gt;;
+    }
+    
+    return (
+        &lt;a href={url} target="_blank" rel="noopener noreferrer"&gt;
+            {children}
+        &lt;/a&gt;
+    );
+}
+</code></pre>
+<h3 id="cross-site-request-forgery-csrf-prevention"><a class="header" href="#cross-site-request-forgery-csrf-prevention">Cross-Site Request Forgery (CSRF) Prevention</a></h3>
+<p><strong>CSRF Protection</strong></p>
+<pre><code class="language-python"># Python Flask CSRF protection
+from flask import Flask, request, session
+import secrets
+import hashlib
+
+app = Flask(__name__)
+app.secret_key = secrets.token_hex(32)
+
+def generate_csrf_token():
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_hex(32)
+    return session['csrf_token']
+
+def validate_csrf_token():
+    token = request.form.get('csrf_token')
+    if not token or token != session.get('csrf_token'):
+        return False
+    return True
+
+@app.route('/transfer', methods=['POST'])
+def transfer_money():
+    if not validate_csrf_token():
+        return "CSRF token validation failed", 403
+    
+    # Process transfer
+    amount = request.form.get('amount')
+    recipient = request.form.get('recipient')
+    
+    # Transfer logic here
+    return "Transfer successful"
+
+# Template usage
+@app.route('/transfer_form')
+def transfer_form():
+    csrf_token = generate_csrf_token()
+    return f'''
+    &lt;form method="POST" action="/transfer"&gt;
+        &lt;input type="hidden" name="csrf_token" value="{csrf_token}"&gt;
+        &lt;input type="number" name="amount" placeholder="Amount"&gt;
+        &lt;input type="text" name="recipient" placeholder="Recipient"&gt;
+        &lt;button type="submit"&gt;Transfer&lt;/button&gt;
+    &lt;/form&gt;
+    '''
+</code></pre>
+<h2 id="security-testing-and-code-review"><a class="header" href="#security-testing-and-code-review">Security Testing and Code Review</a></h2>
+<h3 id="security-code-review-checklist"><a class="header" href="#security-code-review-checklist">Security Code Review Checklist</a></h3>
+<p><strong>Authentication and Authorization</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Passwords are properly hashed and salted</li>
+<li><input disabled="" type="checkbox"/>
+Session tokens are generated using cryptographically secure RNG</li>
+<li><input disabled="" type="checkbox"/>
+Session timeout is implemented</li>
+<li><input disabled="" type="checkbox"/>
+Access controls are enforced on server-side</li>
+<li><input disabled="" type="checkbox"/>
+Privilege escalation is prevented</li>
+</ul>
+<p><strong>Input Validation and Output Encoding</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+All user input is validated</li>
+<li><input disabled="" type="checkbox"/>
+Output is properly encoded based on context</li>
+<li><input disabled="" type="checkbox"/>
+File path validation is implemented</li>
+<li><input disabled="" type="checkbox"/>
+Parameterized queries are used for database access</li>
+<li><input disabled="" type="checkbox"/>
+SQL injection prevention is in place</li>
+</ul>
+<p><strong>Data Protection</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Sensitive data is encrypted at rest and in transit</li>
+<li><input disabled="" type="checkbox"/>
+Proper key management is implemented</li>
+<li><input disabled="" type="checkbox"/>
+Data retention policies are followed</li>
+<li><input disabled="" type="checkbox"/>
+Backup data is protected</li>
+<li><input disabled="" type="checkbox"/>
+Secure deletion of sensitive data</li>
+</ul>
+<p><strong>Error Handling and Logging</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"/>
+Detailed errors are not exposed to users</li>
+<li><input disabled="" type="checkbox"/>
+Sensitive data is not logged</li>
+<li><input disabled="" type="checkbox"/>
+Proper error handling is implemented</li>
+<li><input disabled="" type="checkbox"/>
+Security events are logged</li>
+<li><input disabled="" type="checkbox"/>
+Log files are protected</li>
+</ul>
+<h3 id="security-testing-tools"><a class="header" href="#security-testing-tools">Security Testing Tools</a></h3>
+<p><strong>Static Application Security Testing (SAST)</strong></p>
+<pre><code class="language-bash"># Semgrep security scanning
+semgrep --config=auto --severity=ERROR ./src/
+
+# Bandit Python security scanning
+bandit -r ./src/
+
+# SonarQube security analysis
+sonar-scanner -Dsonar.projectKey=myproject -Dsonar.sources=./src
+</code></pre>
+<p><strong>Dynamic Application Security Testing (DAST)</strong></p>
+<pre><code class="language-bash"># OWASP ZAP scanning
+zap-baseline.py -t https://localhost:3000 -r zap_report.html
+
+# Nmap security scanning
+nmap -sV --script vuln localhost
+
+# SQLMap testing
+sqlmap -u "https://localhost:3000/search?q=test" --batch
+</code></pre>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>Secure coding practices are fundamental to building resilient software systems that can withstand malicious attacks and protect sensitive data. By implementing proper input validation, secure authentication and authorization, robust cryptography, and comprehensive error handling, developers can significantly reduce the attack surface of their applications.</p>
+<p>Security must be integrated throughout the development lifecycle, from initial design through deployment and maintenance. Regular security testing, code reviews, and staying informed about emerging threats are essential for maintaining strong security postures in an evolving threat landscape.</p>
+<p>Remember that security is not a one-time implementation but a continuous process of improvement and adaptation to new challenges and vulnerabilities.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="security-01-principles-threat-modeling.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="security-03-data-protection-privacy.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="security-01-principles-threat-modeling.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="security-03-data-protection-privacy.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

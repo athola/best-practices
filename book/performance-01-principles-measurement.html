@@ -1,0 +1,478 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Performance Principles and Measurement - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="performance-principles-and-measurement"><a class="header" href="#performance-principles-and-measurement">Performance Principles and Measurement</a></h1>
+<p>Performance optimization is a critical aspect of software engineering that requires a systematic approach to measurement, analysis, and improvement. This section covers the fundamental principles of performance engineering and the techniques used to measure and analyze system performance.</p>
+<h2 id="performance-engineering-principles"><a class="header" href="#performance-engineering-principles">Performance Engineering Principles</a></h2>
+<h3 id="performance-as-a-requirement"><a class="header" href="#performance-as-a-requirement">Performance as a Requirement</a></h3>
+<ul>
+<li><strong>Early Consideration</strong>: Treat performance as a first-class requirement from the start</li>
+<li><strong>Continuous Focus</strong>: Maintain performance focus throughout the development lifecycle</li>
+<li><strong>Business Alignment</strong>: Align performance goals with business objectives</li>
+<li><strong>User Experience</strong>: Consider performance impact on user experience</li>
+</ul>
+<h3 id="performance-characteristics"><a class="header" href="#performance-characteristics">Performance Characteristics</a></h3>
+<ul>
+<li><strong>Latency</strong>: Time taken to complete a single operation</li>
+<li><strong>Throughput</strong>: Number of operations completed in a given time period</li>
+<li><strong>Resource Utilization</strong>: How efficiently system resources are used</li>
+<li><strong>Scalability</strong>: Ability to handle increased load</li>
+<li><strong>Reliability</strong>: Consistent performance under various conditions</li>
+</ul>
+<h3 id="performance-budgets"><a class="header" href="#performance-budgets">Performance Budgets</a></h3>
+<ul>
+<li><strong>Define Budgets</strong>: Establish clear performance budgets for different components</li>
+<li><strong>Allocate Resources</strong>: Allocate resources based on performance requirements</li>
+<li><strong>Monitor Compliance</strong>: Continuously monitor compliance with performance budgets</li>
+<li><strong>Adjust as Needed</strong>: Adjust budgets based on changing requirements</li>
+</ul>
+<h2 id="performance-measurement-fundamentals"><a class="header" href="#performance-measurement-fundamentals">Performance Measurement Fundamentals</a></h2>
+<h3 id="measurement-types"><a class="header" href="#measurement-types">Measurement Types</a></h3>
+<ul>
+<li><strong>Benchmarking</strong>: Compare performance against standards or competitors</li>
+<li><strong>Profiling</strong>: Identify performance bottlenecks in code</li>
+<li><strong>Monitoring</strong>: Continuous observation of system performance</li>
+<li><strong>Load Testing</strong>: Test system performance under expected load</li>
+<li><strong>Stress Testing</strong>: Test system performance beyond expected limits</li>
+</ul>
+<h3 id="measurement-metrics"><a class="header" href="#measurement-metrics">Measurement Metrics</a></h3>
+<ul>
+<li><strong>Response Time</strong>: Time from request to response completion</li>
+<li><strong>Throughput</strong>: Requests processed per second</li>
+<li><strong>Error Rate</strong>: Percentage of failed requests</li>
+<li><strong>Resource Usage</strong>: CPU, memory, disk, and network utilization</li>
+<li><strong>Queue Length</strong>: Number of requests waiting to be processed</li>
+<li><strong>Concurrency</strong>: Number of simultaneous operations</li>
+</ul>
+<h3 id="measurement-tools"><a class="header" href="#measurement-tools">Measurement Tools</a></h3>
+<ul>
+<li><strong>Application Performance Monitoring (APM)</strong>: New Relic, Datadog, AppDynamics</li>
+<li><strong>Profiling Tools</strong>: Profilers for different programming languages</li>
+<li><strong>Load Testing Tools</strong>: JMeter, Gatling, Locust</li>
+<li><strong>System Monitoring</strong>: Prometheus, Grafana, Nagios</li>
+<li><strong>Log Analysis</strong>: ELK Stack, Splunk, Graylog</li>
+</ul>
+<h2 id="performance-testing-strategies"><a class="header" href="#performance-testing-strategies">Performance Testing Strategies</a></h2>
+<h3 id="testing-types"><a class="header" href="#testing-types">Testing Types</a></h3>
+<ul>
+<li><strong>Unit Performance Testing</strong>: Test individual components for performance</li>
+<li><strong>Integration Performance Testing</strong>: Test component interactions</li>
+<li><strong>End-to-End Performance Testing</strong>: Test complete user workflows</li>
+<li><strong>Database Performance Testing</strong>: Test database query performance</li>
+<li><strong>Network Performance Testing</strong>: Test network latency and throughput</li>
+</ul>
+<h3 id="testing-methodologies"><a class="header" href="#testing-methodologies">Testing Methodologies</a></h3>
+<ul>
+<li><strong>Baseline Testing</strong>: Establish performance baselines</li>
+<li><strong>Regression Testing</strong>: Ensure performance doesn't degrade over time</li>
+<li><strong>Capacity Testing</strong>: Determine system capacity limits</li>
+<li><strong>Endurance Testing</strong>: Test performance over extended periods</li>
+<li><strong>Spike Testing</strong>: Test response to sudden load increases</li>
+</ul>
+<h3 id="testing-environments"><a class="header" href="#testing-environments">Testing Environments</a></h3>
+<ul>
+<li><strong>Production-like Environments</strong>: Test in environments that mirror production</li>
+<li><strong>Data Volume</strong>: Use realistic data volumes for testing</li>
+<li><strong>Network Conditions</strong>: Simulate real network conditions</li>
+<li><strong>User Behavior</strong>: Simulate realistic user behavior patterns</li>
+<li><strong>Background Load</strong>: Include background system load</li>
+</ul>
+<h2 id="performance-analysis-techniques"><a class="header" href="#performance-analysis-techniques">Performance Analysis Techniques</a></h2>
+<h3 id="bottleneck-identification"><a class="header" href="#bottleneck-identification">Bottleneck Identification</a></h3>
+<ul>
+<li><strong>Resource Analysis</strong>: Identify resource constraints</li>
+<li><strong>Code Analysis</strong>: Analyze code for performance issues</li>
+<li><strong>Database Analysis</strong>: Examine database query performance</li>
+<li><strong>Network Analysis</strong>: Analyze network latency and throughput</li>
+<li><strong>Architecture Analysis</strong>: Review architecture for performance implications</li>
+</ul>
+<h3 id="performance-profiling"><a class="header" href="#performance-profiling">Performance Profiling</a></h3>
+<ul>
+<li><strong>CPU Profiling</strong>: Identify CPU-intensive operations</li>
+<li><strong>Memory Profiling</strong>: Identify memory usage patterns and leaks</li>
+<li><strong>I/O Profiling</strong>: Analyze disk and network I/O operations</li>
+<li><strong>Thread Profiling</strong>: Analyze thread behavior and contention</li>
+<li><strong>Database Profiling</strong>: Examine query execution plans and performance</li>
+</ul>
+<h3 id="root-cause-analysis"><a class="header" href="#root-cause-analysis">Root Cause Analysis</a></h3>
+<ul>
+<li><strong>Data Collection</strong>: Collect comprehensive performance data</li>
+<li><strong>Pattern Recognition</strong>: Identify performance patterns and anomalies</li>
+<li><strong>Correlation Analysis</strong>: Correlate performance metrics with system events</li>
+<li><strong>Hypothesis Testing</strong>: Form and test performance hypotheses</li>
+<li><strong>Solution Validation</strong>: Verify that performance improvements are effective</li>
+</ul>
+<h2 id="performance-monitoring"><a class="header" href="#performance-monitoring">Performance Monitoring</a></h2>
+<h3 id="monitoring-strategies"><a class="header" href="#monitoring-strategies">Monitoring Strategies</a></h3>
+<ul>
+<li><strong>Real-time Monitoring</strong>: Monitor performance in real-time</li>
+<li><strong>Historical Analysis</strong>: Track performance trends over time</li>
+<li><strong>Anomaly Detection</strong>: Identify unusual performance patterns</li>
+<li><strong>Predictive Analysis</strong>: Predict future performance issues</li>
+<li><strong>Automated Alerting</strong>: Set up automated alerts for performance issues</li>
+</ul>
+<h3 id="monitoring-metrics"><a class="header" href="#monitoring-metrics">Monitoring Metrics</a></h3>
+<ul>
+<li><strong>Application Metrics</strong>: Response time, error rate, throughput</li>
+<li><strong>System Metrics</strong>: CPU, memory, disk, network usage</li>
+<li><strong>Business Metrics</strong>: Transaction volume, user activity, conversion rates</li>
+<li><strong>Custom Metrics</strong>: Application-specific performance indicators</li>
+<li><strong>Derived Metrics</strong>: Calculated metrics based on other measurements</li>
+</ul>
+<h3 id="monitoring-tools"><a class="header" href="#monitoring-tools">Monitoring Tools</a></h3>
+<ul>
+<li><strong>APM Tools</strong>: Application Performance Monitoring solutions</li>
+<li><strong>Infrastructure Monitoring</strong>: System and infrastructure monitoring</li>
+<li><strong>Log Monitoring</strong>: Log analysis for performance insights</li>
+<li><strong>Synthetic Monitoring</strong>: Simulated user interactions</li>
+<li><strong>Real User Monitoring (RUM)</strong>: Actual user experience monitoring</li>
+</ul>
+<h2 id="performance-optimization"><a class="header" href="#performance-optimization">Performance Optimization</a></h2>
+<h3 id="optimization-strategies"><a class="header" href="#optimization-strategies">Optimization Strategies</a></h3>
+<ul>
+<li><strong>Algorithm Optimization</strong>: Improve algorithm efficiency</li>
+<li><strong>Data Structure Optimization</strong>: Choose appropriate data structures</li>
+<li><strong>Caching Strategies</strong>: Implement effective caching mechanisms</li>
+<li><strong>Database Optimization</strong>: Optimize database queries and design</li>
+<li><strong>Network Optimization</strong>: Reduce network latency and overhead</li>
+</ul>
+<h3 id="code-level-optimization"><a class="header" href="#code-level-optimization">Code-Level Optimization</a></h3>
+<ul>
+<li><strong>Code Profiling</strong>: Profile code to identify bottlenecks</li>
+<li><strong>Algorithm Selection</strong>: Choose efficient algorithms</li>
+<li><strong>Memory Management</strong>: Optimize memory usage and garbage collection</li>
+<li><strong>Concurrency Optimization</strong>: Improve concurrent processing</li>
+<li><strong>I/O Optimization</strong>: Optimize file and network I/O operations</li>
+</ul>
+<h3 id="system-level-optimization"><a class="header" href="#system-level-optimization">System-Level Optimization</a></h3>
+<ul>
+<li><strong>Hardware Optimization</strong>: Optimize hardware configuration</li>
+<li><strong>Operating System Tuning</strong>: Tune operating system parameters</li>
+<li><strong>Network Configuration</strong>: Optimize network settings</li>
+<li><strong>Database Configuration</strong>: Optimize database configuration</li>
+<li><strong>Application Server Tuning</strong>: Tune application server settings</li>
+</ul>
+<h2 id="performance-documentation"><a class="header" href="#performance-documentation">Performance Documentation</a></h2>
+<h3 id="performance-requirements"><a class="header" href="#performance-requirements">Performance Requirements</a></h3>
+<ul>
+<li><strong>Define Requirements</strong>: Document performance requirements clearly</li>
+<li><strong>Service Level Agreements (SLAs)</strong>: Define performance SLAs</li>
+<li><strong>Performance Budgets</strong>: Document performance budgets</li>
+<li><strong>Acceptance Criteria</strong>: Define performance acceptance criteria</li>
+<li><strong>Performance Targets</strong>: Set specific performance targets</li>
+</ul>
+<h3 id="performance-reports"><a class="header" href="#performance-reports">Performance Reports</a></h3>
+<ul>
+<li><strong>Regular Reporting</strong>: Generate regular performance reports</li>
+<li><strong>Trend Analysis</strong>: Include performance trend analysis</li>
+<li><strong>Issue Tracking</strong>: Document performance issues and resolutions</li>
+<li><strong>Improvement Tracking</strong>: Track performance improvements over time</li>
+<li><strong>Stakeholder Communication</strong>: Communicate performance status to stakeholders</li>
+</ul>
+<h3 id="performance-knowledge-base"><a class="header" href="#performance-knowledge-base">Performance Knowledge Base</a></h3>
+<ul>
+<li><strong>Best Practices</strong>: Document performance best practices</li>
+<li><strong>Lessons Learned</strong>: Capture lessons learned from performance issues</li>
+<li><strong>Optimization Techniques</strong>: Document effective optimization techniques</li>
+<li><strong>Tool Documentation</strong>: Document performance tools and their usage</li>
+<li><strong>Performance Patterns</strong>: Document performance patterns and anti-patterns</li>
+</ul>
+<h2 id="performance-culture"><a class="header" href="#performance-culture">Performance Culture</a></h2>
+<h3 id="team-responsibilities"><a class="header" href="#team-responsibilities">Team Responsibilities</a></h3>
+<ul>
+<li><strong>Performance Ownership</strong>: Assign performance ownership to team members</li>
+<li><strong>Performance Reviews</strong>: Include performance in code reviews</li>
+<li><strong>Performance Training</strong>: Provide performance engineering training</li>
+<li><strong>Performance Awareness</strong>: Foster performance awareness across teams</li>
+<li><strong>Performance Metrics</strong>: Use performance metrics in team evaluations</li>
+</ul>
+<h3 id="performance-processes"><a class="header" href="#performance-processes">Performance Processes</a></h3>
+<ul>
+<li><strong>Performance Testing</strong>: Include performance testing in development process</li>
+<li><strong>Performance Monitoring</strong>: Implement continuous performance monitoring</li>
+<li><strong>Performance Reviews</strong>: Conduct regular performance reviews</li>
+<li><strong>Performance Planning</strong>: Include performance in project planning</li>
+<li><strong>Performance Improvement</strong>: Continuous performance improvement process</li>
+</ul>
+<h3 id="performance-communication"><a class="header" href="#performance-communication">Performance Communication</a></h3>
+<ul>
+<li><strong>Stakeholder Communication</strong>: Communicate performance status to stakeholders</li>
+<li><strong>Team Communication</strong>: Foster communication about performance issues</li>
+<li><strong>Performance Reporting</strong>: Regular performance reporting</li>
+<li><strong>Performance Alerts</strong>: Establish performance alert communication</li>
+<li><strong>Performance Feedback</strong>: Collect and act on performance feedback</li>
+</ul>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<h3 id="performance-engineering"><a class="header" href="#performance-engineering">Performance Engineering</a></h3>
+<ul>
+<li><strong>Start Early</strong>: Begin performance engineering early in development</li>
+<li><strong>Measure Everything</strong>: Measure performance comprehensively</li>
+<li><strong>Optimize Strategically</strong>: Focus optimization on critical paths</li>
+<li><strong>Test Continuously</strong>: Test performance throughout development lifecycle</li>
+<li><strong>Monitor Production</strong>: Monitor performance in production environments</li>
+</ul>
+<h3 id="performance-measurement"><a class="header" href="#performance-measurement">Performance Measurement</a></h3>
+<ul>
+<li><strong>Use Appropriate Tools</strong>: Choose the right tools for measurement</li>
+<li><strong>Establish Baselines</strong>: Create performance baselines for comparison</li>
+<li><strong>Measure Realistically</strong>: Measure under realistic conditions</li>
+<li><strong>Document Measurements</strong>: Document measurement methodologies</li>
+<li><strong>Validate Results</strong>: Validate measurement results</li>
+</ul>
+<h3 id="performance-optimization-1"><a class="header" href="#performance-optimization-1">Performance Optimization</a></h3>
+<ul>
+<li><strong>Profile First</strong>: Profile before optimizing</li>
+<li><strong>Optimize Bottlenecks</strong>: Focus on actual bottlenecks</li>
+<li><strong>Measure Improvements</strong>: Measure the impact of optimizations</li>
+<li><strong>Consider Trade-offs</strong>: Consider trade-offs between performance and other factors</li>
+<li><strong>Test Thoroughly</strong>: Test optimizations thoroughly before deployment</li>
+</ul>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>Performance principles and measurement form the foundation of effective performance engineering. By understanding performance characteristics, implementing comprehensive measurement strategies, analyzing performance data effectively, and fostering a performance-focused culture, organizations can build and maintain high-performance systems.</p>
+<p>Remember that performance engineering is an ongoing process that requires continuous attention, regular measurement, and adaptation to changing requirements and conditions. Make performance a core consideration throughout the software development lifecycle.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="performance.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="performance-02-code-optimization.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="performance.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="performance-02-code-optimization.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

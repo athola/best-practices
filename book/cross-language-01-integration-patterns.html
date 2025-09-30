@@ -1,0 +1,683 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Integration Patterns - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="integration-patterns"><a class="header" href="#integration-patterns">Integration Patterns</a></h1>
+<p>Cross-language integration can be achieved through various patterns, each with its own strengths, weaknesses, and appropriate use cases. Understanding these patterns is crucial for designing effective multi-language systems.</p>
+<h2 id="1-api-based-integration"><a class="header" href="#1-api-based-integration">1. API-Based Integration</a></h2>
+<h3 id="restgraphql-apis"><a class="header" href="#restgraphql-apis">REST/GraphQL APIs</a></h3>
+<p><strong>Language-agnostic communication through HTTP-based APIs</strong></p>
+<h4 id="advantages"><a class="header" href="#advantages">Advantages</a></h4>
+<ul>
+<li><strong>Universal Compatibility</strong>: Works with any language that can make HTTP requests</li>
+<li><strong>Well-Understood</strong>: Extensive tooling and community knowledge</li>
+<li><strong>Scalable</strong>: Easy to scale horizontally with load balancers</li>
+<li><strong>Debuggable</strong>: Standard HTTP debugging tools available</li>
+</ul>
+<h4 id="implementation-examples"><a class="header" href="#implementation-examples">Implementation Examples</a></h4>
+<p><strong>Python Flask API</strong></p>
+<pre><code class="language-python">from flask import Flask, jsonify, request
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    users = [
+        {"id": 1, "name": "Alice", "email": "alice@example.com"},
+        {"id": 2, "name": "Bob", "email": "bob@example.com"}
+    ]
+    return jsonify(users)
+
+@app.route('/api/users', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    # Process user creation
+    return jsonify({"message": "User created", "user": data}), 201
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
+</code></pre>
+<p><strong>Node.js Consumer</strong></p>
+<pre><code class="language-javascript">const axios = require('axios');
+
+async function fetchUsers() {
+    try {
+        const response = await axios.get('http://localhost:5000/api/users');
+        console.log('Users:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error.message);
+    }
+}
+
+async function createUser(userData) {
+    try {
+        const response = await axios.post(
+            'http://localhost:5000/api/users', 
+            userData
+        );
+        console.log('Created user:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating user:', error.message);
+    }
+}
+</code></pre>
+<h4 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h4>
+<ul>
+<li>Use OpenAPI/Swagger for API documentation</li>
+<li>Implement proper authentication and authorization</li>
+<li>Use HTTPS for all communications</li>
+<li>Implement rate limiting and throttling</li>
+<li>Provide comprehensive error responses</li>
+</ul>
+<h3 id="grpc"><a class="header" href="#grpc">gRPC</a></h3>
+<p><strong>High-performance RPC framework using Protocol Buffers</strong></p>
+<h4 id="advantages-1"><a class="header" href="#advantages-1">Advantages</a></h4>
+<ul>
+<li><strong>Performance</strong>: Binary serialization for faster communication</li>
+<li><strong>Strong Typing</strong>: Schema-defined service contracts</li>
+<li><strong>Streaming Support</strong>: Bidirectional streaming capabilities</li>
+<li><strong>Code Generation</strong>: Automatic client/server code generation</li>
+</ul>
+<h4 id="example"><a class="header" href="#example">Example</a></h4>
+<p><strong>Protocol Definition (.proto file)</strong></p>
+<pre><code class="language-protobuf">syntax = "proto3";
+
+package user_service;
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  rpc CreateUser(CreateUserRequest) returns (User);
+}
+
+message GetUserRequest {
+  int32 user_id = 1;
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message ListUsersRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  int32 total = 2;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+}
+</code></pre>
+<h2 id="2-message-queue-integration"><a class="header" href="#2-message-queue-integration">2. Message Queue Integration</a></h2>
+<h3 id="asynchronous-communication"><a class="header" href="#asynchronous-communication">Asynchronous Communication</a></h3>
+<p><strong>Decoupled services through message queues</strong></p>
+<h4 id="popular-technologies"><a class="header" href="#popular-technologies">Popular Technologies</a></h4>
+<ul>
+<li><strong>RabbitMQ</strong>: Feature-rich message broker</li>
+<li><strong>Apache Kafka</strong>: Distributed streaming platform</li>
+<li><strong>AWS SQS</strong>: Simple queue service</li>
+<li><strong>Redis Pub/Sub</strong>: Lightweight messaging</li>
+</ul>
+<h4 id="implementation-examples-1"><a class="header" href="#implementation-examples-1">Implementation Examples</a></h4>
+<p><strong>Python Producer (RabbitMQ)</strong></p>
+<pre><code class="language-python">import pika
+import json
+
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel()
+
+channel.queue_declare(queue='user_events')
+
+def publish_user_event(event_type, user_data):
+    message = {
+        'event_type': event_type,
+        'timestamp': datetime.now().isoformat(),
+        'data': user_data
+    }
+    
+    channel.basic_publish(
+        exchange='',
+        routing_key='user_events',
+        body=json.dumps(message)
+    )
+    print(f"Published {event_type} event")
+
+# Example usage
+publish_user_event('user_created', {
+    'id': 1,
+    'name': 'Alice',
+    'email': 'alice@example.com'
+})
+
+connection.close()
+</code></pre>
+<p><strong>Java Consumer (RabbitMQ)</strong></p>
+<pre><code class="language-java">import com.rabbitmq.client.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class UserEventConsumer {
+    private final static String QUEUE_NAME = "user_events";
+    private final static ObjectMapper objectMapper = new ObjectMapper();
+
+    public static void main(String[] args) throws Exception {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        
+        try (Connection connection = factory.newConnection();
+             Channel channel = connection.createChannel()) {
+            
+            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            
+            DeliverCallback deliverCallback = (consumerTag, delivery) -&gt; {
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println("Received message: " + message);
+                
+                try {
+                    Map&lt;String, Object&gt; event = objectMapper.readValue(
+                        message, Map.class);
+                    processUserEvent(event);
+                } catch (Exception e) {
+                    System.err.println("Error processing message: " + e.getMessage());
+                }
+            };
+            
+            channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -&gt; {});
+            System.out.println("Waiting for messages...");
+            Thread.sleep(Long.MAX_VALUE);
+        }
+    }
+    
+    private static void processUserEvent(Map&lt;String, Object&gt; event) {
+        String eventType = (String) event.get("event_type");
+        Map&lt;String, Object&gt; userData = (Map&lt;String, Object&gt;) event.get("data");
+        
+        System.out.println("Processing " + eventType + " for user: " + userData);
+        // Process the event based on type
+    }
+}
+</code></pre>
+<h4 id="best-practices-1"><a class="header" href="#best-practices-1">Best Practices</a></h4>
+<ul>
+<li>Use appropriate message serialization (JSON, Avro, Protobuf)</li>
+<li>Implement dead-letter queues for failed messages</li>
+<li>Monitor queue depths and processing times</li>
+<li>Handle message idempotency</li>
+<li>Implement proper error handling and retry logic</li>
+</ul>
+<h2 id="3-shared-memory-integration"><a class="header" href="#3-shared-memory-integration">3. Shared Memory Integration</a></h2>
+<h3 id="high-performance-communication"><a class="header" href="#high-performance-communication">High-Performance Communication</a></h3>
+<p><strong>Direct memory access for performance-critical applications</strong></p>
+<h4 id="use-cases"><a class="header" href="#use-cases">Use Cases</a></h4>
+<ul>
+<li><strong>High-Frequency Trading</strong>: Microsecond-level latency requirements</li>
+<li><strong>Real-time Processing</strong>: Audio/video processing pipelines</li>
+<li><strong>Game Development</strong>: Communication between game engine and plugins</li>
+</ul>
+<h4 id="implementation-considerations"><a class="header" href="#implementation-considerations">Implementation Considerations</a></h4>
+<p><strong>C++ Shared Memory Example</strong></p>
+<pre><code class="language-cpp">#include &lt;sys/mman.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;iostream&gt;
+
+struct SharedData {
+    int counter;
+    double values[100];
+    char message[256];
+};
+
+class SharedMemoryManager {
+private:
+    int shm_fd;
+    SharedData* shared_data;
+    const char* shm_name = "/my_shared_memory";
+    
+public:
+    bool create() {
+        shm_fd = shm_open(shm_name, O_CREAT | O_RDWR, 0666);
+        if (shm_fd == -1) {
+            std::cerr &lt;&lt; "Failed to create shared memory" &lt;&lt; std::endl;
+            return false;
+        }
+        
+        ftruncate(shm_fd, sizeof(SharedData));
+        
+        shared_data = (SharedData*)mmap(
+            NULL, sizeof(SharedData), 
+            PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0
+        );
+        
+        if (shared_data == MAP_FAILED) {
+            std::cerr &lt;&lt; "Failed to map shared memory" &lt;&lt; std::endl;
+            return false;
+        }
+        
+        return true;
+    }
+    
+    void writeData(const SharedData&amp; data) {
+        memcpy(shared_data, &amp;data, sizeof(SharedData));
+    }
+    
+    void readData(SharedData&amp; data) {
+        memcpy(&amp;data, shared_data, sizeof(SharedData));
+    }
+    
+    ~SharedMemoryManager() {
+        if (shared_data != MAP_FAILED) {
+            munmap(shared_data, sizeof(SharedData));
+        }
+        if (shm_fd != -1) {
+            close(shm_fd);
+        }
+    }
+};
+</code></pre>
+<p><strong>Python Access to Shared Memory</strong></p>
+<pre><code class="language-python">import mmap
+import struct
+import ctypes
+
+class SharedMemoryAccess:
+    def __init__(self, shm_name="/my_shared_memory"):
+        self.shm_name = shm_name
+        self.shm_fd = None
+        self.shared_mem = None
+        
+    def open(self):
+        self.shm_fd = os.open(self.shm_name, os.O_RDWR)
+        self.shared_mem = mmap.mmap(
+            self.shm_fd, 
+            ctypes.sizeof(SharedData),
+            access=mmap.ACCESS_WRITE
+        )
+        
+    def read_data(self):
+        # Read data from shared memory
+        # Implementation depends on data structure
+        pass
+        
+    def close(self):
+        if self.shared_mem:
+            self.shared_mem.close()
+        if self.shm_fd:
+            os.close(self.shm_fd)
+</code></pre>
+<h4 id="best-practices-2"><a class="header" href="#best-practices-2">Best Practices</a></h4>
+<ul>
+<li>Use proper synchronization mechanisms (semaphores, mutexes)</li>
+<li>Implement memory safety checks</li>
+<li>Handle process crashes gracefully</li>
+<li>Consider memory alignment for performance</li>
+<li>Document memory layout thoroughly</li>
+</ul>
+<h2 id="4-foreign-function-interface-ffi"><a class="header" href="#4-foreign-function-interface-ffi">4. Foreign Function Interface (FFI)</a></h2>
+<h3 id="direct-language-interop"><a class="header" href="#direct-language-interop">Direct Language Interop</a></h3>
+<p><strong>Calling functions from one language directly in another</strong></p>
+<h4 id="common-ffi-implementations"><a class="header" href="#common-ffi-implementations">Common FFI Implementations</a></h4>
+<p><strong>Python ctypes for C Libraries</strong></p>
+<pre><code class="language-python">from ctypes import *
+
+# Load the shared library
+lib = CDLL('./libmylibrary.so')
+
+# Define function prototypes
+lib.add_numbers.argtypes = [c_int, c_int]
+lib.add_numbers.restype = c_int
+
+lib.process_data.argtypes = [c_char_p, c_int]
+lib.process_data.restype = c_void_p
+
+# Use the functions
+result = lib.add_numbers(5, 3)
+print(f"5 + 3 = {result}")
+
+data = b"Hello from Python"
+result_ptr = lib.process_data(data, len(data))
+</code></pre>
+<p><strong>Java JNI for Native Code</strong></p>
+<pre><code class="language-java">public class NativeInterface {
+    // Load the native library
+    static {
+        System.loadLibrary("mylibrary");
+    }
+    
+    // Declare native methods
+    public native int addNumbers(int a, int b);
+    public native String processData(String input);
+    
+    public static void main(String[] args) {
+        NativeInterface ni = new NativeInterface();
+        
+        int result = ni.addNumbers(5, 3);
+        System.out.println("5 + 3 = " + result);
+        
+        String processed = ni.processData("Hello from Java");
+        System.out.println("Processed: " + processed);
+    }
+}
+</code></pre>
+<p><strong>Rust FFI Example</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[no_mangle]
+pub extern "C" fn add_numbers(a: i32, b: i32) -&gt; i32 {
+    a + b
+}
+
+#[no_mangle]
+pub extern "C" fn process_string(input: *const libc::c_char) -&gt; *mut libc::c_char {
+    let c_str = unsafe { std::ffi::CStr::from_ptr(input) };
+    let r_str = c_str.to_str().unwrap_or("");
+    
+    let processed = format!("Processed: {}", r_str);
+    let c_processed = std::ffi::CString::new(processed).unwrap();
+    c_processed.into_raw()
+}
+
+#[no_mangle]
+pub extern "C" fn free_string(s: *mut libc::c_char) {
+    unsafe {
+        if !s.is_null() {
+            let _ = std::ffi::CString::from_raw(s);
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h4 id="best-practices-3"><a class="header" href="#best-practices-3">Best Practices</a></h4>
+<ul>
+<li>Handle memory management carefully</li>
+<li>Use proper error handling across language boundaries</li>
+<li>Consider performance implications of marshaling data</li>
+<li>Document FFI interfaces thoroughly</li>
+<li>Test FFI boundaries extensively</li>
+</ul>
+<h2 id="pattern-selection-guidelines"><a class="header" href="#pattern-selection-guidelines">Pattern Selection Guidelines</a></h2>
+<h3 id="choose-api-based-integration-when"><a class="header" href="#choose-api-based-integration-when">Choose API-Based Integration When:</a></h3>
+<ul>
+<li>Services are developed by different teams</li>
+<li>You need language-agnostic communication</li>
+<li>Scalability and fault isolation are priorities</li>
+<li>You have well-defined service boundaries</li>
+</ul>
+<h3 id="choose-message-queues-when"><a class="header" href="#choose-message-queues-when">Choose Message Queues When:</a></h3>
+<ul>
+<li>You need asynchronous processing</li>
+<li>Services need to be decoupled</li>
+<li>You require load balancing and buffering</li>
+<li>Event-driven architecture is appropriate</li>
+</ul>
+<h3 id="choose-shared-memory-when"><a class="header" href="#choose-shared-memory-when">Choose Shared Memory When:</a></h3>
+<ul>
+<li>Performance is critical (microsecond latency)</li>
+<li>Components run on the same machine</li>
+<li>You have tight coupling requirements</li>
+<li>Memory overhead must be minimized</li>
+</ul>
+<h3 id="choose-ffi-when"><a class="header" href="#choose-ffi-when">Choose FFI When:</a></h3>
+<ul>
+<li>You need to leverage existing native libraries</li>
+<li>Performance is critical for specific operations</li>
+<li>You have small, well-defined interfaces</li>
+<li>Memory safety can be carefully managed</li>
+</ul>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>The choice of integration pattern depends on your specific requirements, team structure, and performance needs. Most real-world systems use a combination of these patterns, applying the right approach for each use case.</p>
+<p>Understanding the trade-offs between these patterns enables you to design systems that are both performant and maintainable, leveraging the strengths of multiple programming languages effectively.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="cross-language.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="cross-language-02-best-practices.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="cross-language.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="cross-language-02-best-practices.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

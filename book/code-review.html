@@ -1,0 +1,415 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Code Review Practices - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="code-review-practices"><a class="header" href="#code-review-practices">Code Review Practices</a></h1>
+<h2 id="scope"><a class="header" href="#scope">Scope</a></h2>
+<p>This chapter provides comprehensive guidance on code review practices, from fundamental concepts to advanced implementation strategies. It covers review processes, quality standards, communication techniques, tooling approaches, and organizational considerations for building and maintaining effective code review cultures.</p>
+<h2 id="audience"><a class="header" href="#audience">Audience</a></h2>
+<p>This chapter serves software developers, team leads, engineering managers, and quality assurance professionals involved in code review processes. Junior developers will learn foundational review practices and etiquette, mid-level engineers will discover effective review techniques and quality standards, and senior engineers will find advanced strategies for architectural reviews, mentorship, and process improvement.</p>
+<h2 id="key-points"><a class="header" href="#key-points">Key Points</a></h2>
+<ul>
+<li><strong>Code reviews ensure quality</strong> through systematic examination and collective ownership</li>
+<li><strong>Review processes should match team context</strong>—different approaches work for different team sizes and project types</li>
+<li><strong>Communication skills are essential</strong> for providing constructive feedback and resolving disagreements</li>
+<li><strong>Tooling and automation enhance efficiency</strong> by streamlining review workflows and enforcing standards</li>
+<li><strong>Review culture determines success</strong>—psychological safety and continuous improvement drive effectiveness</li>
+</ul>
+<p>Code review is the systematic examination of computer source code by developers other than the original author. The goal is to improve code quality, share knowledge, and maintain consistency across the codebase while enabling team collaboration and growth.</p>
+<p>This chapter provides a comprehensive guide to code review practices, covering everything from fundamental concepts to advanced implementation strategies. Each section addresses specific aspects of designing, implementing, and optimizing code review processes effectively.</p>
+<h2 id="chapter-overview"><a class="header" href="#chapter-overview">Chapter Overview</a></h2>
+<p>This chapter is organized into the following detailed sections:</p>
+<ul>
+<li>
+<p><strong><a href="./code-review-01-fundamentals.html">Code Review Fundamentals</a></strong> - Understanding the core principles, benefits, and challenges of code reviews</p>
+<ul>
+<li>Core Principles: Quality assurance, knowledge sharing, and collective ownership</li>
+<li>Benefits and Trade-offs: Improved quality, learning opportunities, and time investment</li>
+<li>Review Types: Formal inspections, lightweight reviews, and pair programming</li>
+<li>Common Challenges: Time constraints, personality conflicts, and review effectiveness</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./code-review-02-process.html">Review Process Design</a></strong> - Best practices for designing effective code review workflows</p>
+<ul>
+<li>Review Workflow: From pull request creation to merge approval</li>
+<li>Review Roles: Author, reviewer, and approver responsibilities</li>
+<li>Review Criteria: Establishing clear standards and expectations</li>
+<li>Review Metrics: Measuring review quality, speed, and effectiveness</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./code-review-03-techniques.html">Review Techniques and Standards</a></strong> - Different approaches to examining code and their appropriate use cases</p>
+<ul>
+<li>Code Reading Strategies: Systematic approaches to examining code changes</li>
+<li>Quality Checkpoints: Security, performance, maintainability, and testing</li>
+<li>Pattern Recognition: Identifying common issues and anti-patterns</li>
+<li>Best Practices: Language-specific and framework-specific review guidelines</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./code-review-04-communication.html">Communication and Feedback</a></strong> - Strategies for effective communication during code reviews</p>
+<ul>
+<li>Constructive Feedback: Providing clear, actionable, and respectful feedback</li>
+<li>Handling Criticism: Receiving and responding to review comments professionally</li>
+<li>Conflict Resolution: Addressing disagreements and differing opinions</li>
+<li>Review Etiquette: Professional conduct and communication standards</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./code-review-05-tooling.html">Tooling and Automation</a></strong> - Tools and technologies for streamlining code review processes</p>
+<ul>
+<li>Review Platforms: GitHub, GitLab, Bitbucket, and specialized review tools</li>
+<li>Automated Checks: Static analysis, linting, and automated testing integration</li>
+<li>Review Templates: Standardizing review processes and documentation</li>
+<li>Integration Workflows: Connecting reviews with CI/CD and project management</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./code-review-06-advanced.html">Advanced Review Practices</a></strong> - Sophisticated approaches for complex review scenarios</p>
+<ul>
+<li>Architectural Reviews: Evaluating system design and structural decisions</li>
+<li>Security Reviews: Focusing on vulnerability identification and mitigation</li>
+<li>Performance Reviews: Assessing efficiency and scalability implications</li>
+<li>Legacy Code Reviews: Strategies for reviewing and improving existing codebases</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./code-review-07-culture.html">Review Culture and Psychology</a></strong> - Building and maintaining effective review cultures</p>
+<ul>
+<li>Psychological Safety: Creating environments where feedback is welcomed and valued</li>
+<li>Learning and Growth: Using reviews as opportunities for skill development</li>
+<li>Team Dynamics: Managing personalities, egos, and collaborative relationships</li>
+<li>Continuous Improvement: Evolving review processes based on experience and feedback</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./code-review-08-measurement.html">Measuring Review Effectiveness</a></strong> - Strategies for evaluating and improving code review processes</p>
+<ul>
+<li>Quality Metrics: Defect rates, bug prevention, and code quality indicators</li>
+<li>Efficiency Metrics: Review time, cycle time, and throughput measurements</li>
+<li>Satisfaction Metrics: Team morale, engagement, and perceived value</li>
+<li>Improvement Frameworks: Using data to drive process enhancements</li>
+</ul>
+</li>
+</ul>
+<h2 id="key-themes"><a class="header" href="#key-themes">Key Themes</a></h2>
+<h3 id="quality-assurance-and-defect-prevention"><a class="header" href="#quality-assurance-and-defect-prevention">Quality Assurance and Defect Prevention</a></h3>
+<p>Effective code review practices ensure software quality through:</p>
+<ul>
+<li>Early detection and prevention of bugs and issues</li>
+<li>Consistent application of coding standards and best practices</li>
+<li>Identification of security vulnerabilities and performance problems</li>
+<li>Verification of requirements compliance and design integrity</li>
+</ul>
+<h3 id="knowledge-sharing-and-learning"><a class="header" href="#knowledge-sharing-and-learning">Knowledge Sharing and Learning</a></h3>
+<p>Code reviews enable team growth and development by:</p>
+<ul>
+<li>Distributing knowledge across the team and reducing bus factor</li>
+<li>Providing mentorship opportunities for junior developers</li>
+<li>Exposing team members to different parts of the codebase</li>
+<li>Facilitating discussion about design decisions and trade-offs</li>
+</ul>
+<h3 id="collaboration-and-collective-ownership"><a class="header" href="#collaboration-and-collective-ownership">Collaboration and Collective Ownership</a></h3>
+<p>Review processes foster team collaboration through:</p>
+<ul>
+<li>Shared responsibility for code quality and system health</li>
+<li>Open discussion about technical decisions and approaches</li>
+<li>Building trust and mutual respect among team members</li>
+<li>Creating a culture of continuous improvement and learning</li>
+</ul>
+<h3 id="process-efficiency-and-scalability"><a class="header" href="#process-efficiency-and-scalability">Process Efficiency and Scalability</a></h3>
+<p>Well-designed review workflows optimize team productivity by:</p>
+<ul>
+<li>Balancing thoroughness with speed and efficiency</li>
+<li>Automating routine checks and validation tasks</li>
+<li>Scaling review processes to match team size and project complexity</li>
+<li>Integrating reviews seamlessly with development workflows</li>
+</ul>
+<h2 id="who-should-read-this-chapter"><a class="header" href="#who-should-read-this-chapter">Who Should Read This Chapter</a></h2>
+<p>This chapter is essential reading for:</p>
+<ul>
+<li><strong>Software Developers</strong>: Participating effectively in code reviews as both authors and reviewers</li>
+<li><strong>Team Leads and Tech Leads</strong>: Establishing review standards and processes for their teams</li>
+<li><strong>Engineering Managers</strong>: Building review cultures and managing review-related team dynamics</li>
+<li><strong>Quality Assurance Professionals</strong>: Understanding how reviews fit into overall quality strategies</li>
+<li><strong>Software Architects</strong>: Conducting architectural reviews and ensuring design consistency</li>
+</ul>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>Readers should have basic familiarity with:</p>
+<ul>
+<li>Software development practices and programming concepts</li>
+<li>Version control systems, particularly Git</li>
+<li>Code quality concepts and testing fundamentals</li>
+<li>Basic understanding of software architecture and design patterns</li>
+<li>Collaboration tools and communication platforms</li>
+</ul>
+<h2 id="learning-path"><a class="header" href="#learning-path">Learning Path</a></h2>
+<p>For readers new to code reviews, we recommend reading the sections in order:</p>
+<ol>
+<li>Start with <strong>Code Review Fundamentals</strong> to understand the principles and benefits</li>
+<li>Continue with <strong>Review Process Design</strong> to learn about establishing effective workflows</li>
+<li>Proceed to <strong>Review Techniques and Standards</strong> to understand examination approaches</li>
+<li>Study <strong>Communication and Feedback</strong> to learn about effective interaction during reviews</li>
+<li>Explore <strong>Tooling and Automation</strong> to understand available tools and automation</li>
+<li>Review <strong>Advanced Review Practices</strong> to learn about sophisticated review scenarios</li>
+<li>Consider <strong>Review Culture and Psychology</strong> to understand team dynamics</li>
+<li>Finish with <strong>Measuring Review Effectiveness</strong> to understand evaluation and improvement</li>
+</ol>
+<p>Experienced practitioners may want to focus on specific sections relevant to their current challenges or areas for improvement.</p>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>Code review represents a fundamental practice for building high-quality software and developing strong engineering teams. By mastering these concepts and implementing them effectively, teams can:</p>
+<ul>
+<li><strong>Improve Code Quality</strong>: Through systematic examination and early defect detection</li>
+<li><strong>Accelerate Learning</strong>: By sharing knowledge and exposing developers to different approaches</li>
+<li><strong>Build Stronger Teams</strong>: Through collaboration, trust, and mutual respect</li>
+<li><strong>Reduce Technical Debt</strong>: By maintaining standards and preventing accumulation of issues</li>
+<li><strong>Enhance System Maintainability</strong>: Through consistent design and implementation practices</li>
+</ul>
+<p>The journey to code review excellence is not about following rigid rules—it's about understanding the underlying principles, choosing the right approaches for your context, and continuously improving based on experience and results.</p>
+<p>Each section in this chapter builds upon the previous ones, creating a comprehensive framework for understanding and implementing effective code review practices across different types of projects and organizational contexts.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="workflows.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="knowledge-management.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="workflows.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="knowledge-management.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

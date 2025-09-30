@@ -1,0 +1,431 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Documentation Types and Standards - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="documentation-types-and-standards"><a class="header" href="#documentation-types-and-standards">Documentation Types and Standards</a></h1>
+<h2 id="code-comments"><a class="header" href="#code-comments">Code Comments</a></h2>
+<p>Code comments serve as inline documentation for developers working directly with the codebase.</p>
+<h3 id="effective-code-comment-principles"><a class="header" href="#effective-code-comment-principles">Effective Code Comment Principles:</a></h3>
+<ul>
+<li><strong>Explain "why" rather than "what"</strong>—the code itself shows what it does</li>
+<li><strong>Document design decisions</strong> and trade-offs</li>
+<li><strong>Provide context</strong> for complex algorithms or business logic</li>
+<li><strong>Include usage examples</strong> for non-obvious functions</li>
+</ul>
+<h3 id="comment-types"><a class="header" href="#comment-types">Comment Types:</a></h3>
+<pre><code class="language-javascript">// Function-level comment: Purpose and usage
+/**
+ * Validates user input against security requirements.
+ * @param {string} input - The user input to validate
+ * @returns {boolean} True if input meets security requirements
+ * @throws {ValidationError} If input contains malicious content
+ */
+
+// Inline comment: Explains non-obvious logic
+const sanitizedInput = input.replace(/&lt;script\b[^&lt;]*(?:(?!&lt;\/script&gt;)&lt;[^&lt;]*)*&lt;\/script&gt;/gi, '');
+// Remove script tags to prevent XSS attacks while preserving other HTML
+</code></pre>
+<h3 id="comment-best-practices"><a class="header" href="#comment-best-practices">Comment Best Practices:</a></h3>
+<ul>
+<li><strong>Keep comments current</strong> with code changes</li>
+<li><strong>Use consistent formatting</strong> across the codebase</li>
+<li><strong>Avoid obvious comments</strong> that repeat what the code already shows</li>
+<li><strong>Write for future maintainers</strong> who may not have context</li>
+<li><strong>Include TODO and FIXME markers</strong> for temporary solutions</li>
+</ul>
+<h2 id="api-documentation"><a class="header" href="#api-documentation">API Documentation</a></h2>
+<p>API documentation serves developers who need to integrate with your software components.</p>
+<h3 id="essential-api-documentation-elements"><a class="header" href="#essential-api-documentation-elements">Essential API Documentation Elements:</a></h3>
+<ul>
+<li><strong>Endpoint descriptions</strong> with HTTP methods and URLs</li>
+<li><strong>Parameter specifications</strong> including types, requirements, and validation rules</li>
+<li><strong>Request/response examples</strong> in multiple formats (JSON, XML)</li>
+<li><strong>Authentication and authorization</strong> requirements</li>
+<li><strong>Error handling</strong> with status codes and error message formats</li>
+<li><strong>Rate limiting</strong> and usage restrictions</li>
+</ul>
+<h3 id="api-documentation-structure"><a class="header" href="#api-documentation-structure">API Documentation Structure:</a></h3>
+<pre><code class="language-markdown">## Authentication
+All API requests require authentication using Bearer tokens.
+
+## Endpoints
+
+### GET /api/users
+Retrieves a list of users with optional filtering.
+
+**Parameters:**
+- `limit` (integer, optional): Maximum number of users to return
+- `offset` (integer, optional): Number of users to skip for pagination
+- `role` (string, optional): Filter users by role
+
+**Response:**
+```json
+{
+  "users": [
+    {
+      "id": "123",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "developer"
+    }
+  ],
+  "total": 1,
+  "limit": 10,
+  "offset": 0
+}
+</code></pre>
+<pre><code>
+### API Documentation Best Practices:
+
+- **Provide interactive examples** that users can test
+- **Include error scenarios** and how to handle them
+- **Document versioning** and deprecation policies
+- **Use consistent naming conventions** across endpoints
+- **Include performance considerations** and limitations
+
+## User Guides and Tutorials
+
+User guides help end users successfully adopt and utilize your software features.
+
+### Effective User Guide Structure:
+
+- **Goal-oriented organization** around user tasks and objectives
+- **Step-by-step procedures** with clear numbered instructions
+- **Screenshots and diagrams** to illustrate complex processes
+- **Prerequisites and requirements** clearly stated
+- **Troubleshooting sections** for common issues
+
+### Tutorial Best Practices:
+
+- **Start with simple examples** and progress to complex scenarios
+- **Provide working code samples** that users can run immediately
+- **Include expected outputs** for each step
+- **Offer multiple learning paths** for different experience levels
+
+### User Guide Components:
+
+**Getting Started:**
+- Installation and setup instructions
+- Basic configuration steps
+- First-use examples and quick wins
+
+**Feature Deep Dives:**
+- Detailed explanations of individual features
+- Advanced configuration options
+- Best practices and optimization tips
+
+**Troubleshooting:**
+- Common issues and solutions
+- Error message explanations
+- Debugging and diagnostic procedures
+
+## Architecture Documentation
+
+Architecture documentation communicates system design decisions and technical approaches to technical stakeholders.
+
+### Architecture Documentation Components:
+
+- **System overview** with high-level architecture diagrams
+- **Design decisions** and trade-off analysis
+- **Component interactions** and data flow descriptions
+- **Technology choices** and justification
+- **Scalability and performance** considerations
+- **Security architecture** and threat models
+
+### Architecture Documentation Types:
+
+**High-Level Architecture:**
+- System context diagrams
+- Component relationships
+- Data flow overview
+- Integration points
+
+**Detailed Design:**
+- Component specifications
+- Interface definitions
+- Data models and schemas
+- Algorithm descriptions
+
+**Operational Documentation:**
+- Deployment procedures
+- Monitoring and alerting
+- Backup and recovery
+- Performance tuning
+
+### Architecture Documentation Best Practices:
+
+- **Use visual diagrams** to complement text descriptions
+- **Document rationale** behind design decisions
+- **Include non-functional requirements** and how they're addressed
+- **Provide context** for technical choices
+- **Keep documentation synchronized** with actual implementation
+
+## Technical Specifications
+
+Technical specifications provide detailed requirements and implementation guidelines for specific features or components.
+
+### Specification Components:
+
+- **Functional requirements** and user stories
+- **Technical constraints** and limitations
+- **Interface specifications** and contracts
+- **Performance requirements** and SLAs
+- **Security requirements** and compliance needs
+
+### Specification Best Practices:
+
+- **Be specific and measurable** in requirements
+- **Include acceptance criteria** for each requirement
+- **Document dependencies** and prerequisites
+- **Provide examples** and edge cases
+- **Review and validate** specifications with stakeholders
+
+## Next
+
+Continue to [Documentation Maintenance](./documentation-06-maintenance.md) to learn about processes for keeping documentation current and relevant, or return to the main [Documentation Standards](./documentation.md) chapter.
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="documentation-04-inclusive-language.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="documentation-06-maintenance.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="documentation-04-inclusive-language.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="documentation-06-maintenance.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

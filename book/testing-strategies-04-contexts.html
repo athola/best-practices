@@ -1,0 +1,403 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Testing Strategies for Different Contexts - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="testing-strategies-for-different-contexts"><a class="header" href="#testing-strategies-for-different-contexts">Testing Strategies for Different Contexts</a></h1>
+<p>Different types of systems and development contexts require different testing approaches. What works well for a web application might be completely inappropriate for an embedded system or a data processing pipeline. Understanding these contextual differences is crucial for developing effective testing strategies.</p>
+<h2 id="testing-legacy-systems"><a class="header" href="#testing-legacy-systems">Testing Legacy Systems</a></h2>
+<p>Legacy systems present unique testing challenges due to their age, complexity, and often poor testability. However, testing is even more critical in these systems because they're often business-critical and fragile.</p>
+<p><strong>Characteristics of Legacy Systems</strong></p>
+<ul>
+<li><strong>Poor Testability</strong>: Not designed with testing in mind</li>
+<li><strong>Complex Dependencies</strong>: Tightly coupled with other systems</li>
+<li><strong>Outdated Technologies</strong>: Using older frameworks and languages</li>
+<li><strong>Lack of Documentation</strong>: Original developers may have left</li>
+<li><strong>Business Critical</strong>: Often support core business functions</li>
+<li><strong>High Risk</strong>: Changes can have unexpected consequences</li>
+</ul>
+<p><strong>Legacy Testing Strategies</strong></p>
+<ul>
+<li><strong>Characterization Testing</strong>: Capture current behavior before making changes</li>
+<li><strong>Wrapper Testing</strong>: Create testable wrappers around untestable code</li>
+<li><strong>Contract Testing</strong>: Define and test interfaces between components</li>
+<li><strong>Golden Master Testing</strong>: Compare outputs against known good results</li>
+<li><strong>Incremental Testing</strong>: Add tests gradually as you modify code</li>
+</ul>
+<p><strong>The Strangler Fig Pattern</strong></p>
+<ol>
+<li><strong>Identify Boundaries</strong>: Find natural boundaries in the legacy system</li>
+<li><strong>Create Replacement</strong>: Build new, testable components</li>
+<li><strong>Redirect Traffic</strong>: Gradually redirect traffic to new components</li>
+<li><strong>Retire Legacy</strong>: Decommission legacy components incrementally</li>
+</ol>
+<p><strong>Legacy Testing Best Practices</strong></p>
+<ul>
+<li><strong>Start with Safety Net</strong>: Create characterization tests before making changes</li>
+<li><strong>Focus on High-Risk Areas</strong>: Prioritize testing critical business functions</li>
+<li><strong>Use Black Box Testing</strong>: Test behavior rather than implementation</li>
+<li><strong>Invest in Tooling</strong>: Build tools to make testing easier</li>
+<li><strong>Document Assumptions</strong>: Capture business rules and system behavior</li>
+</ul>
+<p>"Testing legacy systems requires patience and creativity. You can't always write the kinds of tests you'd write in a greenfield system, but you can still create effective tests that provide confidence and enable safe evolution."</p>
+<h2 id="testing-microservices"><a class="header" href="#testing-microservices">Testing Microservices</a></h2>
+<p>Microservices architectures introduce unique testing challenges due to their distributed nature, network dependencies, and the need for comprehensive integration testing.</p>
+<p><strong>Microservices Testing Challenges</strong></p>
+<ul>
+<li><strong>Service Dependencies</strong>: Each service depends on multiple other services</li>
+<li><strong>Network Complexity</strong>: Network issues can cause test failures</li>
+<li><strong>Data Consistency</strong>: Maintaining data consistency across services</li>
+<li><strong>Deployment Complexity</strong>: Services may be deployed independently</li>
+<li><strong>Performance Testing</strong>: Testing performance in a distributed system</li>
+<li><strong>Contract Testing</strong>: Ensuring service interfaces remain compatible</li>
+</ul>
+<p><strong>Microservices Testing Strategy</strong></p>
+<ul>
+<li><strong>Unit Tests</strong>: Test individual service logic in isolation</li>
+<li><strong>Component Tests</strong>: Test each service with its dependencies mocked</li>
+<li><strong>Contract Tests</strong>: Verify that service interfaces are compatible</li>
+<li><strong>Integration Tests</strong>: Test interactions between services</li>
+<li><strong>End-to-End Tests</strong>: Test complete user workflows across services</li>
+<li><strong>Chaos Engineering</strong>: Test system resilience under failure conditions</li>
+</ul>
+<p><strong>Contract Testing</strong>
+Contract testing ensures that services can communicate with each other without breaking changes. It's particularly important in microservices architectures where services are developed and deployed independently.</p>
+<p><strong>Contract Testing Process</strong></p>
+<ol>
+<li><strong>Define Contracts</strong>: Specify the expected interface between services</li>
+<li><strong>Generate Tests</strong>: Create tests that verify contract compliance</li>
+<li><strong>Verify Providers</strong>: Test that service providers meet the contract</li>
+<li><strong>Verify Consumers</strong>: Test that service consumers use the contract correctly</li>
+<li><strong>Continuous Verification</strong>: Run contract tests in CI/CD pipelines</li>
+</ol>
+<p><strong>Service Virtualization</strong>
+Service virtualization allows you to test services in isolation by simulating their dependencies. This is essential for microservices testing where real dependencies may not be available or may be too slow for testing.</p>
+<p><strong>Service Virtualization Benefits</strong></p>
+<ul>
+<li><strong>Isolation</strong>: Test services without depending on real implementations</li>
+<li><strong>Performance</strong>: Faster than real services, especially for integration tests</li>
+<li><strong>Reliability</strong>: Eliminate network issues and external service failures</li>
+<li><strong>Cost</strong>: Reduce costs associated with testing environments</li>
+<li><strong>Control</strong>: Simulate various scenarios and edge cases</li>
+</ul>
+<p>"Microservices testing requires a shift from monolithic testing approaches. You need to test at multiple levels—unit, component, contract, integration, and end-to-end—and each level serves a specific purpose in ensuring the overall system works correctly."</p>
+<h2 id="testing-data-processing-systems"><a class="header" href="#testing-data-processing-systems">Testing Data Processing Systems</a></h2>
+<p>Data processing systems, including ETL pipelines, data warehouses, and analytics platforms, require specialized testing approaches due to their focus on data quality, performance, and correctness.</p>
+<p><strong>Data Processing Testing Challenges</strong></p>
+<ul>
+<li><strong>Data Volume</strong>: Large datasets make testing slow and expensive</li>
+<li><strong>Data Complexity</strong>: Complex data relationships and transformations</li>
+<li><strong>Data Quality</strong>: Ensuring data accuracy and consistency</li>
+<li><strong>Performance</strong>: Processing speed and resource utilization</li>
+<li><strong>Temporal Aspects</strong>: Time-based data and processing windows</li>
+<li><strong>Idempotency</strong>: Ensuring repeated processing produces consistent results</li>
+</ul>
+<p><strong>Data Processing Testing Types</strong></p>
+<ul>
+<li><strong>Data Validation Tests</strong>: Verify data quality and correctness</li>
+<li><strong>Transformation Tests</strong>: Test data transformations and business rules</li>
+<li><strong>Performance Tests</strong>: Measure processing speed and resource usage</li>
+<li><strong>Integration Tests</strong>: Test integration with data sources and sinks</li>
+<li><strong>Recovery Tests</strong>: Test recovery from failures and errors</li>
+<li><strong>Regression Tests</strong>: Ensure changes don't break existing functionality</li>
+</ul>
+<p><strong>Data Testing Strategies</strong></p>
+<ul>
+<li><strong>Sample Testing</strong>: Test with representative data samples</li>
+<li><strong>Data Profiling</strong>: Analyze data characteristics and quality</li>
+<li><strong>Golden Dataset Testing</strong>: Test with known good datasets</li>
+<li><strong>Data Lineage Testing</strong>: Track data through the processing pipeline</li>
+<li><strong>Statistical Testing</strong>: Use statistical methods to verify results</li>
+<li><strong>Visual Validation</strong>: Use data visualization to verify results</li>
+</ul>
+<p><strong>Performance Testing for Data Systems</strong></p>
+<ul>
+<li><strong>Throughput Testing</strong>: Measure data processing rates</li>
+<li><strong>Latency Testing</strong>: Measure end-to-end processing time</li>
+<li><strong>Scalability Testing</strong>: Test performance with increasing data volumes</li>
+<li><strong>Resource Utilization</strong>: Monitor CPU, memory, and I/O usage</li>
+<li><strong>Concurrency Testing</strong>: Test performance under concurrent loads</li>
+</ul>
+<p><strong>Data Quality Testing</strong></p>
+<ul>
+<li><strong>Completeness</strong>: Verify that all required data is present</li>
+<li><strong>Accuracy</strong>: Verify that data values are correct</li>
+<li><strong>Consistency</strong>: Verify that data is consistent across sources</li>
+<li><strong>Timeliness</strong>: Verify that data is processed within expected timeframes</li>
+<li><strong>Validity</strong>: Verify that data conforms to expected formats and ranges</li>
+</ul>
+<p>"Testing data processing systems requires a different mindset than testing application software. You need to think about data quality, performance at scale, and the correctness of complex transformations. The goal is not just to verify that the code works, but to verify that the data is correct and the system can handle the expected volume."</p>
+<h2 id="testing-context-selection-framework"><a class="header" href="#testing-context-selection-framework">Testing Context Selection Framework</a></h2>
+<p>Choosing the right testing approach depends on understanding your specific context. Use this framework to evaluate your testing needs:</p>
+<p><strong>Context Factors to Consider</strong></p>
+<ul>
+<li><strong>System Type</strong>: Web application, mobile app, embedded system, data pipeline</li>
+<li><strong>Business Domain</strong>: Finance, healthcare, e-commerce, social media</li>
+<li><strong>Risk Profile</strong>: Safety-critical, high-availability, best-effort</li>
+<li><strong>Team Structure</strong>: Co-located, distributed, in-house, outsourced</li>
+<li><strong>Development Process</strong>: Agile, waterfall, DevOps, continuous delivery</li>
+<li><strong>Regulatory Requirements</strong>: Compliance needs and audit requirements</li>
+</ul>
+<p><strong>Testing Strategy Decision Matrix</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Context Factor</th><th>Testing Priority</th><th>Recommended Approach</th></tr></thead><tbody>
+<tr><td><strong>Safety-Critical</strong></td><td>High reliability</td><td>Extensive unit, integration, and formal methods</td></tr>
+<tr><td><strong>High-Traffic Web</strong></td><td>Performance and scalability</td><td>Load testing, chaos engineering, monitoring</td></tr>
+<tr><td><strong>Data Processing</strong></td><td>Data quality and correctness</td><td>Data validation, golden dataset testing</td></tr>
+<tr><td><strong>Legacy System</strong></td><td>Risk mitigation</td><td>Characterization testing, wrapper testing</td></tr>
+<tr><td><strong>Microservices</strong></td><td>Integration and contracts</td><td>Contract testing, service virtualization</td></tr>
+<tr><td><strong>Mobile App</strong></td><td>User experience and compatibility</td><td>Device testing, UI automation, beta testing</td></tr>
+</tbody></table>
+</div>
+<p><strong>Adapting Your Testing Strategy</strong></p>
+<ol>
+<li><strong>Assess Your Context</strong>: Understand your system type and requirements</li>
+<li><strong>Identify Risks</strong>: Determine what could go wrong and the impact</li>
+<li><strong>Choose Test Types</strong>: Select appropriate test types based on risks</li>
+<li><strong>Balance Investment</strong>: Allocate testing resources based on risk and value</li>
+<li><strong>Iterate and Improve</strong>: Continuously evaluate and adjust your strategy</li>
+</ol>
+<p>"There's no one-size-fits-all testing strategy. The best approach is to understand your specific context, identify your biggest risks, and invest in testing that provides the most value for your particular situation. Regularly reevaluate your strategy as your context evolves."</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="testing-strategies-03-types.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="testing-strategies-05-advanced.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="testing-strategies-03-types.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="testing-strategies-05-advanced.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

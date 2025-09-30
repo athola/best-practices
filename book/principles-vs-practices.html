@@ -1,0 +1,354 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Principles vs Practices: Avoiding Dogmatism - Engineering Best Practices Guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Engineering Best Practices Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-org/best-practices" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="principles-vs-practices-avoiding-dogmatism"><a class="header" href="#principles-vs-practices-avoiding-dogmatism">Principles vs Practices: Avoiding Dogmatism</a></h1>
+<h2 id="scope"><a class="header" href="#scope">Scope</a></h2>
+<p>This chapter examines the critical relationship between engineering principles and practices, focusing on how to avoid dogmatic thinking that leads to poor technical decisions. It provides frameworks for understanding when and how to apply principles contextually, rather than treating them as universal rules.</p>
+<h2 id="audience"><a class="header" href="#audience">Audience</a></h2>
+<p>This chapter serves software engineers at all levels who struggle with conflicting advice and want to develop better judgment. Junior engineers will learn to avoid common dogmatic pitfalls, mid-level engineers will gain frameworks for making context-aware decisions, and senior engineers will find structured approaches for mentoring others and resolving principle conflicts.</p>
+<h2 id="key-points"><a class="header" href="#key-points">Key Points</a></h2>
+<ul>
+<li><strong>Principles derive meaning from context</strong>—the same principle can be brilliant in one situation and disastrous in another</li>
+<li><strong>Dogmatic application of principles</strong> leads to poor engineering decisions and unnecessary complexity</li>
+<li><strong>Effective engineering requires balancing</strong> contradictory principles based on specific project needs</li>
+<li><strong>Engineering judgment develops through experience</strong> in recognizing patterns and understanding context</li>
+<li><strong>Principles should serve as heuristics</strong> that guide thinking, not as rigid rules that replace it</li>
+</ul>
+<p>Before diving into specific practices, it's crucial to understand the relationship between principles and practices. As Wittgenstein observed, language (and principles) derive meaning from their use and context. When we treat engineering principles as rigid rules rather than contextual guidelines, they can become dogmatic and lead to poor decisions.</p>
+<h2 id="chapter-overview"><a class="header" href="#chapter-overview">Chapter Overview</a></h2>
+<p>This chapter is organized into the following detailed sections:</p>
+<ul>
+<li>
+<p><strong><a href="./principles-vs-practices-01-danger-of-dogmatism.html">The Danger of Principle-Driven Dogmatism</a></strong> - Understanding how well-intentioned principles can become harmful when applied without context</p>
+<ul>
+<li>Examples of Misapplied Principles: How DRY, YAGNI, and SOLID can be harmful when divorced from context</li>
+<li>The Problem with Universal Rules: Why principles lose their power when treated as universal truths</li>
+<li>The Origin of Principles: How engineering principles emerged from real-world experiences and specific contexts</li>
+<li>The Contextual Nature of Wisdom: True engineering wisdom lies in understanding when and how to apply principles</li>
+<li>The Cost of Dogmatic Thinking: Reduced problem-solving, increased complexity, team conflict, and missed opportunities</li>
+<li>Moving Beyond Dogmatism: Using principles as heuristics that guide thinking rather than replace it</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./principles-vs-practices-02-context-is-everything.html">Context is Everything</a></strong> - Exploring why context determines the effectiveness of engineering practices</p>
+<ul>
+<li>Key Context Factors: Project size, team experience, business domain, performance needs, and constraints</li>
+<li>Context Examples: Startup vs. enterprise, solo developer vs. distributed team, different project types</li>
+<li>The Context-Practice Matrix: How different contexts call for different practices and approaches</li>
+<li>Assessing Your Context: Questions to help determine which practices are right for your specific situation</li>
+<li>Evolving Context: How context changes over time and how practices should evolve with it</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./principles-vs-practices-03-balancing-principles.html">The Engineer's Dilemma: Balancing Contradictory Principles</a></strong> - Frameworks for navigating conflicting principles in software engineering</p>
+<ul>
+<li>Common Contradictory Principles: DRY vs WET, YAGNI vs Build for Future, Move Fast vs Move Slow</li>
+<li>Real-World Examples: Case studies of principle conflicts and their resolutions</li>
+<li>A Framework for Resolving Principle Conflicts: Five-step systematic approach to decision-making</li>
+<li>The Wisdom of Experienced Engineers: How senior engineers navigate principle conflicts effectively</li>
+<li>Developing Engineering Judgment: Pattern recognition, contextual awareness, and continuous learning</li>
+</ul>
+</li>
+</ul>
+<h2 id="key-themes"><a class="header" href="#key-themes">Key Themes</a></h2>
+<p>Engineering principles gain meaning from their context. Principles serve as heuristics that suggest approaches rather than mandate actions. The same principle can work brilliantly in one situation yet fail disastrously in another. Most principles emerged from specific contexts and problems, not universal truths. Effective engineers develop situational awareness to recognize when principles apply and when to set them aside. True engineering wisdom comes from understanding context rather than following rules blindly.</p>
+<p>Dogmatic principle application creates several problems in software development. When principles replace thinking, problem-solving abilities decline and innovation suffers. Applying principles where they don't fit often creates unnecessary complexity, generating more problems than solutions. Dogmatic positions spark unnecessary arguments that hinder team collaboration. Rigid adherence prevents exploring potentially better solutions, leading to missed opportunities. Engineers who follow rules without understanding fail to develop the judgment needed for effective decision-making.</p>
+<p>Software engineering requires balancing conflicting principles. Trade-off awareness helps engineers understand that optimizing for one principle often means sacrificing another. Contextual decision-making involves choosing which principles to prioritize based on specific situations. Framework development creates systematic approaches for resolving principle conflicts. Experience-based judgment comes from learning past successes and failures to make better decisions. Practical wisdom develops the ability to know when to follow principles and when to break them.</p>
+<h3 id="developing-engineering-judgment"><a class="header" href="#developing-engineering-judgment">Developing Engineering Judgment</a></h3>
+<p>The ultimate goal is to develop practical judgment that transcends rigid principle-following:</p>
+<ul>
+<li><strong>Pattern Recognition</strong>: Identifying similar situations and applying lessons from past experiences</li>
+<li><strong>Contextual Analysis</strong>: Understanding the unique factors that make each situation different</li>
+<li><strong>Continuous Learning</strong>: Building knowledge through experience, reflection, and study</li>
+<li><strong>Mentorship and Collaboration</strong>: Learning from others and sharing insights with team members</li>
+<li><strong>Adaptive Thinking</strong>: Adjusting approaches as situations evolve and new information emerges</li>
+</ul>
+<h2 id="who-should-read-this-chapter"><a class="header" href="#who-should-read-this-chapter">Who Should Read This Chapter</a></h2>
+<p>This chapter is essential reading for:</p>
+<ul>
+<li><strong>Software Developers</strong>: Understanding how to apply principles contextually rather than dogmatically</li>
+<li><strong>Junior Engineers</strong>: Learning to avoid common pitfalls of principle misapplication and developing judgment</li>
+<li><strong>Mid-level Engineers</strong>: Gaining frameworks for making context-aware decisions and balancing conflicting principles</li>
+<li><strong>Senior Engineers</strong>: Developing structured approaches for mentoring others and resolving principle conflicts</li>
+<li><strong>Engineering Managers</strong>: Understanding how to foster environments that encourage contextual thinking over dogmatic rule-following</li>
+</ul>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>Readers should have basic familiarity with:</p>
+<ul>
+<li>Software development principles and practices (DRY, YAGNI, SOLID, etc.)</li>
+<li>Experience working on software development teams</li>
+<li>Basic understanding of software architecture and design patterns</li>
+<li>Exposure to different project types and development contexts</li>
+<li>Interest in improving decision-making and engineering judgment</li>
+</ul>
+<h2 id="learning-path"><a class="header" href="#learning-path">Learning Path</a></h2>
+<p>For readers new to principles vs practices, we recommend reading the sections in order:</p>
+<ol>
+<li>Start with <strong>The Danger of Principle-Driven Dogmatism</strong> to understand how principles can become harmful when applied without context</li>
+<li>Continue with <strong>Context is Everything</strong> to learn about the factors that determine which practices work in which situations</li>
+<li>Finish with <strong>The Engineer's Dilemma: Balancing Contradictory Principles</strong> to master frameworks for resolving principle conflicts</li>
+</ol>
+<p>Experienced practitioners may want to focus on specific sections relevant to their current challenges:</p>
+<ul>
+<li><strong>For team leaders</strong>: Focus on context assessment and helping teams make appropriate principle choices</li>
+<li><strong>For architects</strong>: Dive into the framework for resolving principle conflicts in design decisions</li>
+<li><strong>For mentors</strong>: Use the examples and frameworks to help junior engineers develop better judgment</li>
+<li><strong>For process improvement</strong>: Apply the contextual thinking approach to team practices and methodologies</li>
+</ul>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>Principles vs practices forms the foundation of engineering wisdom and effective decision-making. By mastering these concepts and implementing them effectively, engineers can:</p>
+<ul>
+<li><strong>Avoid Dogmatic Pitfalls</strong>: By understanding the contextual nature of principles and avoiding rigid rule-following</li>
+<li><strong>Make Better Decisions</strong>: Through frameworks that balance contradictory principles based on specific contexts</li>
+<li><strong>Develop Professional Judgment</strong>: By moving beyond principle knowledge to contextual wisdom and experience</li>
+<li><strong>Improve Team Collaboration</strong>: By fostering environments that value contextual thinking over dogmatic positions</li>
+<li><strong>Achieve Better Outcomes</strong>: Through appropriate application of principles that match the specific needs of each situation</li>
+</ul>
+<p>Engineering wisdom develops through judgment, not principle accumulation. Understanding how principles derive meaning from context enables engineers to move beyond dogmatic thinking and make better technical decisions.</p>
+<p>This chapter builds a framework for understanding principles and practices across different project types and organizational contexts. The sections on dogmatism dangers, contextual analysis, and principle balancing offer practical approaches that engineers can adapt to their specific decision-making challenges.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="software-craftsmanship-02-mindsets-behaviors.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="principles-vs-practices-01-danger-of-dogmatism.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="software-craftsmanship-02-mindsets-behaviors.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="principles-vs-practices-01-danger-of-dogmatism.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
