@@ -1,1 +1,5 @@
 .agent/
+book
+.vale/styles/*
+!.vale/styles/.gitkeep
+*.txt
