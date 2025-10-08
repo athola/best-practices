@@ -1,6 +1,8 @@
 [book]
 title = "Engineering Best Practices Guide"
 authors = ["Engineering Community"]
+description = "A comprehensive guide covering software engineering best practices"
+language = "en"
 src = "src"
 
 [build]
@@ -9,5 +11,16 @@ build-dir = "book"
 [output.html]
 default-theme = "light"
 preferred-dark-theme = "navy"
-git-repository-url = "https://github.com/your-org/best-practices"
+git-repository-url = "https://github.com/athola/best-practices"
 git-repository-icon = "fa-github"
+additional-css = []
+additional-js = []
+
+[output.html.print]
+enable = true
+
+[output.html.fold]
+enable = false
+
+[output.html.playground]
+editable = false
